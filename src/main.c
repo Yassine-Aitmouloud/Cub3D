@@ -19,7 +19,12 @@ t_cup	*g_game(void)
 
 	return (&infos);
 }
-
+int close2(int key)
+{
+    if (key == ESC)
+        exit(0);
+    return 1;
+}
 int close()
 {
     exit(0);
@@ -30,6 +35,7 @@ void    game_init()
     g_game()->mlx = mlx_init();
     g_game()->win = mlx_new_window(g_game()->mlx,WIDTH,HEIGHT,"hallo");
     mlx_hook(g_game()->win,CROSS,0,close,NULL);
+    mlx_key_hook(g_game()->win,close2,NULL);
 }
 
 int main(int ac, char **av)
