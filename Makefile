@@ -1,41 +1,26 @@
-NAME = Cub3d
-CFLAGS = -Wall -Wextra -Werror
 CC = cc
+CFLAGS = -Wall -Wextra -Werror -g3
+SRC = main.c conf_file_pars.c
 
-Cubfiles = src/main.c src/utils.c
+OBJ = $(SRC:.c=.o)
+NAME = cub
+LIBFT = libft/libft.a
 
-libftfiles =  includes/libft/ft_atoi.c     includes/libft/ft_isalpha.c  includes/libft/ft_itoa.c  \
-			  	includes/libft/ft_lstnew_bonus.c includes/libft/ft_memcpy.c includes/libft/ft_putendl_fd.c \
-			  	includes/libft/ft_strchr.c includes/libft/ft_strlcat.c includes/libft/ft_strncmp.c  includes/libft/ft_substr.c \
-				includes/libft/ft_bzero.c includes/libft/ft_isascii.c includes/libft/ft_lstadd_back_bonus.c includes/libft/ft_lstsize_bonus.c \
-				includes/libft/ft_memmove.c includes/libft/ft_putnbr_fd.c includes/libft/ft_strdup.c includes/libft/ft_strlcpy.c \
-				includes/libft/ft_strnstr.c  includes/libft/ft_tolower.c includes/libft/ft_calloc.c includes/libft/ft_isdigit.c \
-				includes/libft/ft_lstadd_front_bonus.c  includes/libft/ft_memchr.c includes/libft/ft_memset.c includes/libft/ft_putstr_fd.c \
-				includes/libft/ft_striteri.c  includes/libft/ft_strlen.c includes/libft/ft_strrchr.c includes/libft/ft_toupper.c \
-				includes/libft/ft_isalnum.c  includes/libft/ft_isprint.c includes/libft/ft_lstlast_bonus.c includes/libft/ft_memcmp.c \
-				includes/libft/ft_putchar_fd.c  includes/libft/ft_split.c includes/libft/ft_strjoin.c includes/libft/ft_strmapi.c \
-				includes/libft/ft_strtrim.c \
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+all: $(LIBFT) $(NAME) 
 
-OBJ_cub = $(Cubfiles:.c=.o)
+$(LIBFT):
+	$(MAKE) -C libft
 
-OBJ_libft = $(libftfiles:.c=.o)
-
-all: $(NAME)
-
-$(NAME) : $(OBJ_cub) $(OBJ_libft)
-	$(CC) $(OBJ_cub) $(OBJ_libft) -lmlx -lXext -lX11 -o $(NAME)
-
+$(NAME): $(OBJ)
+	$(CC) $(OBJ) $(LIBFT) -lreadline -lhistory -o $(NAME)
 
 clean:
-	rm -f $(OBJ_cub) $(OBJ_libft) 
+	$(MAKE) -C libft clean
+	rm -rf $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	$(MAKE) -C libft fclean
+	rm -rf $(NAME)
 
-re: fclean all 
-
-.PHONY: all clean fclean re
-.SECONDARY: $(OBJ_cub) $(OBJ_libft)
+re: fclean all

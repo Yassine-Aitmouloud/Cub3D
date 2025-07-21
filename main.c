@@ -1,0 +1,140 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/21 10:22:10 by abenba            #+#    #+#             */
+/*   Updated: 2025/07/21 16:31:32 by abenba           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "cub3d.h"
+t_content   *content(void)
+{
+    static t_content content;
+
+    return (&content);
+}
+
+int ft_isspace(int c)
+{
+    return (c == ' '  || c == '\t' || c == '\n' ||
+            c == '\r' || c == '\f' || c == '\v');
+}
+
+char *ft_trim_whitespace(char *str)
+{
+    char *end;
+    
+    while (ft_isspace(*str))
+        str++;
+    end = str + strlen(str) - 1;
+    while (end > str && ft_isspace(*end))
+        end--;
+    *(end + 1) = '\0';
+    return (str);
+}
+
+int ft_empty_line(const char *line)
+{
+	int (i) = 0;
+    if (line == NULL)
+        return (1);
+        
+    while (line[i])
+    {
+        if (!ft_isspace(line[i]))
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
+int add_key(char *line)
+{
+	char (*str) = ft_strdup(line);
+	if (!str)
+		return (3);
+	char (*tmp) = ft_trim_whitespace(str);
+    if (!ft_strncmp(tmp, "NO ", 3) ||
+        !ft_strncmp(tmp, "SO ", 3) ||
+        !ft_strncmp(tmp, "WE ", 3) ||
+        !ft_strncmp(tmp, "EA ", 3))
+    {
+        content()->tex_num += 1;
+        return (free(str), 1);
+    }
+    else if (!ft_strncmp(tmp, "F ", 2) ||
+        !ft_strncmp(tmp, "C ", 2))
+    {
+        content()->colors_num += 1; 
+        return (free(str), 2);
+    }
+    else if (ft_strchr(" 01NSEW", *tmp))
+        return (free(str), 0);
+    return (free(str), 3);
+}
+
+size_t ft_arrlen(char **str)
+{
+    size_t (i) = 0;
+    while (str[i])
+    {
+        i++;
+    }
+    return (i);
+}
+
+void free_split_array(char **arr)
+{
+    int i = 0;
+    if (!arr)
+        return;
+    while (arr[i])
+    {
+        free(arr[i]);
+        i++;
+    }
+    free(arr);
+}
+
+int	is_num(char *arg)
+{
+	int	i;
+
+	i = 0;
+	if (!arg || !*arg)
+		return (1);
+	if (arg[0] == '-' || arg[0] == '+')
+		i++;
+	while (arg[i])
+	{
+		if (!ft_isdigit(arg[i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void error(char *msg)
+{
+    write(2, msg, ft_strlen(msg));
+    exit(1);
+}
+int main(int ac, char **av)
+{
+    int fd;
+
+    if (ac != 2)
+        return (1);
+    if (check_file_name(av[1], ".cub") == 1)
+        error("Error\nmust end with .cub\n");
+    fd = open(av[1], O_RDONLY);
+    if (fd < 0)
+        return (1); 
+    if (check_content(fd) == 1)
+        error("Error\nnot valid content\n");
+    printf("%d", content()->map_height);
+}
