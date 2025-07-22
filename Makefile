@@ -3,7 +3,7 @@ CFLAGS = -Wall -Wextra -Werror -g3
 SRC = main.c conf_file_pars.c
 
 OBJ = $(SRC:.c=.o)
-NAME = cub
+NAME = cub3D
 LIBFT = libft/libft.a
 
 

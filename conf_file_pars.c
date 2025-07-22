@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:23 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/21 16:30:42 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/22 09:42:00 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,18 +216,14 @@ int number_of_commas(char *line)
 
 int check_content(int fd)
 {
-    char (*line) = NULL;
+    char (*line) = get_next_line(fd);
+	char (*tmp) = NULL;
 	int (key) = 0;
 	content()->map_flag = 0;
-	line = get_next_line(fd);
 	while (line)
 	{
-		// if (valid_line(line) == 1)
-		// 	return (1);
 		if (ft_empty_line(line) && content()->map_flag == 0)
-		{
 			free(line);
-		}
 		else
 		{
 			key = add_key(line);
@@ -243,10 +239,13 @@ int check_content(int fd)
 			}
 			else if (key == 0)
 			{
+				tmp = ft_trim_whitespace(line);
 				if (content()->tex_num != 4 || content()->colors_num != 2)
 					return (1);
 				content()->map_flag = 1;
 				content()->map_height++;
+				if ((size_t)content()->map_width < ft_strlen(tmp))
+					content()->map_width = ft_strlen(tmp);
 			}
 			free(line);
 		}

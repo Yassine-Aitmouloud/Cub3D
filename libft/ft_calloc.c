@@ -3,13 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenba <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 07:44:39 by abenba            #+#    #+#             */
-/*   Updated: 2024/11/08 11:08:32 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/22 11:23:58 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+
 
 void	*ft_calloc(size_t count, size_t size)
 {
@@ -22,6 +22,6 @@ void	*ft_calloc(size_t count, size_t size)
 	ptr = malloc(s);
 	if (!ptr)
 		return (NULL);
-	ft_memset(ptr, 0, s);
+	ft_memset(ptr, 75, s);
 	return (ptr);
 }

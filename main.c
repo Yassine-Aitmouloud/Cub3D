@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:10 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/21 16:31:32 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/22 10:49:50 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,10 @@ int main(int ac, char **av)
     int fd;
 
     if (ac != 2)
+    {
+        printf("cub3D [map]\n");
         return (1);
+    }
     if (check_file_name(av[1], ".cub") == 1)
         error("Error\nmust end with .cub\n");
     fd = open(av[1], O_RDONLY);
@@ -136,5 +139,11 @@ int main(int ac, char **av)
         return (1); 
     if (check_content(fd) == 1)
         error("Error\nnot valid content\n");
-    printf("%d", content()->map_height);
+    // if (parse_map(fd) == 1)
+    //     error("Error\nmap not valid\n");
+    // printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
+    // printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
+    // printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
+    close(fd);
+    return (0);
 }
