@@ -20,8 +20,15 @@ t_content   *content(void)
 
 int ft_isspace(int c)
 {
-    return (c == ' '  || c == '\t' || c == '\n' ||
-            c == '\r' || c == '\f' || c == '\v');
+    return (c == ' ' || c == '\n');
+}
+
+int ft_isspace_n(int c, char d)
+{
+    if (d == 'M')
+        return (c == '\n' || c == '\t' || c == '\r' || c == '\v' || c == '\f');
+    else
+    return (c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == '\v' || c == '\f');
 }
 
 char *ft_trim_whitespace(char *str)
@@ -37,7 +44,7 @@ char *ft_trim_whitespace(char *str)
     return (str);
 }
 
-int ft_empty_line(const char *line)
+int ft_empty_line(const char *line, char c)
 {
 	int (i) = 0;
     if (line == NULL)
@@ -45,7 +52,7 @@ int ft_empty_line(const char *line)
         
     while (line[i])
     {
-        if (!ft_isspace(line[i]))
+        if (!ft_isspace_n(line[i], c))
             return (0);
         i++;
     }
@@ -64,17 +71,17 @@ int add_key(char *line)
         !ft_strncmp(tmp, "EA ", 3))
     {
         content()->tex_num += 1;
-        return (free(str), 1);
+        return (1);
     }
     else if (!ft_strncmp(tmp, "F ", 2) ||
         !ft_strncmp(tmp, "C ", 2))
     {
         content()->colors_num += 1; 
-        return (free(str), 2);
+        return (2);
     }
     else if (ft_strchr(" 01NSEW", *tmp))
-        return (free(str), 0);
-    return (free(str), 3);
+        return (0);
+    return (3);
 }
 
 size_t ft_arrlen(char **str)
@@ -85,19 +92,6 @@ size_t ft_arrlen(char **str)
         i++;
     }
     return (i);
-}
-
-void free_split_array(char **arr)
-{
-    int i = 0;
-    if (!arr)
-        return;
-    while (arr[i])
-    {
-        free(arr[i]);
-        i++;
-    }
-    free(arr);
 }
 
 int	is_num(char *arg)
@@ -121,8 +115,20 @@ int	is_num(char *arg)
 void error(char *msg)
 {
     write(2, msg, ft_strlen(msg));
+    gc_collect();
     exit(1);
 }
+
+void print_map()
+{
+    int (i) = 0;
+    while (content()->map[i])
+    {
+        printf("%s\n", content()->map[i]);
+        i++;
+    }
+}
+
 int main(int ac, char **av)
 {
     int fd;
@@ -139,11 +145,15 @@ int main(int ac, char **av)
         return (1); 
     if (check_content(fd) == 1)
         error("Error\nnot valid content\n");
-    // if (parse_map(fd) == 1)
-    //     error("Error\nmap not valid\n");
+    close(fd);
+    fd = open(av[1], O_RDONLY);
+    if (parse_map(fd) == 1)
+        error("Error\nmap not valid\n");
     // printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
     // printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
     // printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
+    print_map();
     close(fd);
+    gc_collect();
     return (0);
 }

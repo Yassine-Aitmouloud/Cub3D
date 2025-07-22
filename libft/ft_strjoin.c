@@ -41,7 +41,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	if (!s1 || !s2)
 		return (NULL);
 	ptr_len = ft_strlen(s1) + ft_strlen(s2);
-	ptr = (char *)malloc(ptr_len + 1);
+	ptr = (char *)gc_malloc(ptr_len + 1);
 	if (!ptr)
 		return (NULL);
 	if (ptr_len == 0)

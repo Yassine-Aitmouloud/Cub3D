@@ -26,65 +26,58 @@ int check_file_name(char *argv , char *extention)
 	ext = ft_substr(argv, i + 1, ft_strlen(argv));
 	if (ft_strcmp(ext, extention) != 0)
 	{
-		free(ext);
 		return (1);
 	}
 	if (argv[i] == '/' || argv[i] == ' ')
 	{
-		free(ext);
 		return (1);
 	}
-	free(ext);
 	return (0);
 }
-int get_texture_no(char **str, char *line, char *s)
+int get_texture_no(char **str)
 {
 	if (!str || ft_arrlen(str) != 2)
-		return (free(line), free(s), 1);
+		return (1);
 	content()->no_texture = ft_trim_whitespace(ft_strdup(str[1]));
 	if (!content()->no_texture)
 	{
-		free_split_array(str);
-		return (free(line), free(s), 1);
+		return (1);
 	}
 	return (0);
 }
 
-int get_texture_so(char **str, char *line, char *s)
+int get_texture_so(char **str)
 {
 	if (!str || ft_arrlen(str) != 2)
-		return (free(line), free(s), 1);
+		return (1);
 	content()->so_texture = ft_trim_whitespace(ft_strdup(str[1]));
 	if (!content()->so_texture)
 	{
-		free_split_array(str);
-		return (free(line), free(s), 1);
+		return (1);
 	}
 	return (0);
 }
 
-int get_texture_we(char **str, char *line, char *s)
+int get_texture_we(char **str)
 {
 	if (!str || ft_arrlen(str) != 2)
-		return (free(line), free(s), 1);
+		return (1);
 	content()->we_texture = ft_trim_whitespace(ft_strdup(str[1]));
 	if (!content()->we_texture)
 	{
-		free_split_array(str);
-		return (free(line), free(s), 1);
+		return (1);
 	}
 	return (0);
 }
 
-int get_texture_ea(char **str, char *line, char *s)
+int get_texture_ea(char **str)
 {
 	if (!str || ft_arrlen(str) != 2)
-		return (free(line), free(s), 1);
+		return (1);
 	content()->ea_texture = ft_trim_whitespace(ft_strdup(str[1]));
 	if (!content()->ea_texture)
 	{
-		free_split_array(str);
-		return (free(line), free(s), 1);
+		return (1);
 	}
 	return (0);
 }
@@ -99,7 +92,7 @@ int check_textures(char *line)
 	if (ft_strncmp(tmp, "NO ", 3) == 0)
 	{
 		str = ft_split(tmp, " ");
-		if (get_texture_no(str, line, s))
+		if (get_texture_no(str))
 		{
 			return (1);
 		}
@@ -107,22 +100,21 @@ int check_textures(char *line)
 	else if (ft_strncmp(tmp, "SO ", 3) == 0)
 	{
 		str = ft_split(tmp, " ");
-		if (get_texture_so(str, line, s))
+		if (get_texture_so(str))
 			return (1);
 	}
 	else if (ft_strncmp(tmp, "WE ", 3) == 0)
 	{
 		str = ft_split(tmp, " ");
-		if (get_texture_we(str, line, s))
+		if (get_texture_we(str))
 			return (1);
 	}
 	else if (ft_strncmp(tmp, "EA ", 3) == 0)
 	{
 		str = ft_split(tmp, " ");
-		if (get_texture_ea(str, line, s))
+		if (get_texture_ea(str))
 			return (1); 
 	}
-	free(s);
 	return (0);
 }
 
@@ -131,24 +123,24 @@ int get_colors(int *i, char **s)
 	while (s[(*i)])
 	{
 		if (is_num(s[(*i)]))
-			return (free_split_array(s), 1);
+			return (1);
 		if (*i == 1)
 		{
 			content()->red = ft_atoi(s[(*i)]);
 			if (content()->red < 0 || content()->red > 255)
-				return (free_split_array(s), 1);
+				return (1);
 		}
 		else if (*i ==  2)
 		{
 			content()->green = ft_atoi(s[(*i)]);
 			if (content()->green < 0 || content()->green > 255)
-				return (free_split_array(s), 1);
+				return (1);
 		}
 		else if (*i ==  3)
 		{
 			content()->blue = ft_atoi(s[(*i)]);
 			if (content()->blue < 0 || content()->blue > 255)
-				return (free_split_array(s), 1);
+				return (1);
 		}
 		(*i)++;
 	}
@@ -178,7 +170,7 @@ int check_colors(char *line)
 	if (s == NULL)
 		return (1);
 	if (ft_arrlen(s) != 4)
-		return (free_split_array(s), 1);
+		return (1);
 	while (s[i])
 	{
 		if (ft_strcmp(s[i] , "C"))
@@ -222,8 +214,11 @@ int check_content(int fd)
 	content()->map_flag = 0;
 	while (line)
 	{
-		if (ft_empty_line(line) && content()->map_flag == 0)
-			free(line);
+		if (ft_empty_line(line, 'N') && content()->map_flag == 0)
+		{
+			line = get_next_line(fd);
+			continue;
+		}
 		else
 		{
 			key = add_key(line);
@@ -239,15 +234,18 @@ int check_content(int fd)
 			}
 			else if (key == 0)
 			{
+				if (ft_empty_line(line, 'M'))
+					return (1);
 				tmp = ft_trim_whitespace(line);
 				if (content()->tex_num != 4 || content()->colors_num != 2)
 					return (1);
 				content()->map_flag = 1;
 				content()->map_height++;
-				if ((size_t)content()->map_width < ft_strlen(tmp))
-					content()->map_width = ft_strlen(tmp);
+				if ((size_t)content()->map_width < ft_strlen(line))
+					content()->map_width = ft_strlen(line);
 			}
-			free(line);
+			else
+				return (1);
 		}
 		line = get_next_line(fd);
 	}

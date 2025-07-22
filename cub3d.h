@@ -15,6 +15,13 @@
 
 # include "libft/libft.h"
 
+typedef struct t_GC
+{
+    void *ptr;
+    struct t_GC *next;
+} t_garcol;
+
+
 typedef struct file_content
 {
     char *no_texture;
@@ -32,19 +39,22 @@ typedef struct file_content
     int red;
     int green;
     int blue;
+    t_garcol *g_head;
+
 } t_content;
 
 int check_file_name(char *argv , char *extention);
 void error(char *msg);
 int check_content(int fd);
-int ft_empty_line(const char *line);
+int ft_empty_line(const char *line, char c);
 t_content   *content(void);
 int add_key(char *line);
 char *ft_trim_whitespace(char *str);
-void free_split_array(char **arr);
 size_t ft_arrlen(char **str);
 int	is_num(char *arg);
 int parse_map(int fd);
-
+void	gc_register(void *ptr);
+void	*gc_malloc(size_t size);
+void	gc_collect(void);
 
 # endif

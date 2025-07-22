@@ -87,7 +87,7 @@ char	*ft_strtrim(char const *s1, char const *set)
 	if (i == last + 1)
 		return (ft_strdup(""));
 	end = ft_end(s1, set, last);
-	ptr = malloc(end - i + 2);
+	ptr = gc_malloc(end - i + 2);
 	if (!ptr)
 		return (NULL);
 	return (ft_alloc(ptr, s1, i, end));

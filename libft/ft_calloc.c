@@ -9,7 +9,7 @@
 /*   Updated: 2025/07/22 11:23:58 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
+#include "libft.h"
 
 void	*ft_calloc(size_t count, size_t size)
 {
@@ -19,7 +19,7 @@ void	*ft_calloc(size_t count, size_t size)
 	if (count != 0 && (__SIZE_MAX__ / count < size))
 		return (NULL);
 	s = count * size;
-	ptr = malloc(s);
+	ptr = gc_malloc(s);
 	if (!ptr)
 		return (NULL);
 	ft_memset(ptr, 75, s);

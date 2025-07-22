@@ -39,7 +39,7 @@ char	*ft_word(char const *s, char *c, size_t *i)
     }
 	*i = *i - word;
 	y = 0;
-	ptr = (char *)malloc(word + 1);
+	ptr = (char *)gc_malloc(word + 1);
 	if (!ptr)
 		return (NULL);
     while (s[(*i)])
@@ -106,19 +106,6 @@ size_t	ft_count_word(char const *s, char *c)
 	return (count);
 }
 
-void	ft_free(char **ptr)
-{
-	size_t	i;
-
-	i = 0;
-	while (ptr[i])
-	{
-		free(ptr[i]);
-		i++;
-	}
-	free(ptr);
-}
-
 char	**ft_make(char const *s, char *c, char **ptr, size_t len)
 {
 	size_t	y;
@@ -143,7 +130,6 @@ char	**ft_make(char const *s, char *c, char **ptr, size_t len)
 		ptr[y] = ft_word(s, c, &i);
 		if (ptr[y] == NULL)
 		{
-			ft_free(ptr);
 			return (NULL);
 		}
 		y++;
@@ -162,7 +148,7 @@ char	**ft_split(char const *s, char *c)
 	if (!s)
 		return (NULL);
 	len = ft_count_word(s, c);
-	ptr = (char **)malloc(sizeof(char *) * (len + 1));
+	ptr = (char **)gc_malloc(sizeof(char *) * (len + 1));
 	if (!ptr)
 		return (NULL);
 	return (ft_make(s, c, ptr, len));

@@ -22,7 +22,6 @@ char	*fill_buffer(int fd, char *left, char *buffer)
 		chr_read = read(fd, buffer, BUFFER_SIZE);
 		if (chr_read == -1)
 		{
-			free(left);
 			left = NULL;
 			break ;
 		}
@@ -33,11 +32,10 @@ char	*fill_buffer(int fd, char *left, char *buffer)
 			left = ft_strdup("");
 		tmp = left;
 		left = ft_strjoin(tmp, buffer);
-		free(tmp);
 		if (ft_strchr(left, '\n'))
 			break ;
 	}
-	return (free(buffer), buffer = NULL, left);
+	return (buffer = NULL, left);
 }
 
 char	*make_line(char *left, char **line)
@@ -54,7 +52,6 @@ char	*make_line(char *left, char **line)
 			*line = NULL;
 		else
 			*line = ft_strdup(left);
-		free(left);
 		left = NULL;
 	}
 	else if (left)
@@ -62,7 +59,6 @@ char	*make_line(char *left, char **line)
 		*line = ft_substr(left, 0, i + 1);
 		tmp = left;
 		left = ft_substr(left, i + 1, ft_strlen(left) - i);
-		free(tmp);
 	}
 	return (left);
 }
@@ -75,8 +71,8 @@ char	*get_next_line(int fd)
 
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (free(left), left = NULL, NULL);
-	buffer = (char *)malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
+		return (left = NULL, NULL);
+	buffer = (char *)gc_malloc(((size_t)BUFFER_SIZE + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	left = fill_buffer(fd, left, buffer);
