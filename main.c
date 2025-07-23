@@ -14,8 +14,13 @@
 t_content   *content(void)
 {
     static t_content content;
-
     return (&content);
+}
+
+t_parse   *parse(void)
+{
+    static t_parse parse;
+    return (&parse);
 }
 
 int ft_isspace(int c)
@@ -129,6 +134,16 @@ void print_map()
     }
 }
 
+int ft_rep_tex()
+{
+    if (parse()->no != 1
+        || parse()->so != 1
+        || parse()->we != 1
+        || parse()->ea != 1)
+        return (1);
+    return (0);
+}
+
 int main(int ac, char **av)
 {
     int fd;
@@ -144,14 +159,18 @@ int main(int ac, char **av)
     if (fd < 0)
         return (1); 
     if (check_content(fd) == 1)
-        error("Error\nnot valid content\n");
+        error("Error\nNot a valid content\n");
+    if (ft_rep_tex())
+        error("Error\nNot a valid content\n");
+    if (content()->map_height <= 2 || content()->map_width <= 2)
+        error("Error\nNot a valid map\n");
     close(fd);
     fd = open(av[1], O_RDONLY);
     if (parse_map(fd) == 1)
-        error("Error\nmap not valid\n");
-    // printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
-    // printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
-    // printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
+        error("Error\nNot a valid map\n");
+    printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
+    printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
+    printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
     print_map();
     close(fd);
     gc_collect();

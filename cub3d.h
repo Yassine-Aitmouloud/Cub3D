@@ -40,8 +40,17 @@ typedef struct file_content
     int green;
     int blue;
     t_garcol *g_head;
-
+    int invalid;
 } t_content;
+
+typedef struct s_parse 
+{
+    int no;
+    int so;
+    int we;
+    int ea;
+    int flag;
+} t_parse;
 
 int check_file_name(char *argv , char *extention);
 void error(char *msg);
@@ -56,5 +65,6 @@ int parse_map(int fd);
 void	gc_register(void *ptr);
 void	*gc_malloc(size_t size);
 void	gc_collect(void);
+t_parse   *parse(void);
 
 # endif

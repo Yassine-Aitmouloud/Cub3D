@@ -86,11 +86,20 @@ int check_textures(char *line)
 {
 	char (**str) = NULL;
 	char (*s) = ft_strdup(line);
+	if (parse()->flag == 0)
+	{
+		parse()->no = 0;
+		parse()->so = 0;
+		parse()->we = 0;
+		parse()->ea = 0;
+		parse()->flag = 1;
+	}
 	if (!s)
 		return (1);
 	char (*tmp) = ft_trim_whitespace(s);
 	if (ft_strncmp(tmp, "NO ", 3) == 0)
 	{
+		parse()->no = 1;
 		str = ft_split(tmp, " ");
 		if (get_texture_no(str))
 		{
@@ -99,18 +108,21 @@ int check_textures(char *line)
 	}
 	else if (ft_strncmp(tmp, "SO ", 3) == 0)
 	{
+		parse()->so = 1;
 		str = ft_split(tmp, " ");
 		if (get_texture_so(str))
 			return (1);
 	}
 	else if (ft_strncmp(tmp, "WE ", 3) == 0)
 	{
+		parse()->we = 1;
 		str = ft_split(tmp, " ");
 		if (get_texture_we(str))
 			return (1);
 	}
 	else if (ft_strncmp(tmp, "EA ", 3) == 0)
 	{
+		parse()->ea = 1;
 		str = ft_split(tmp, " ");
 		if (get_texture_ea(str))
 			return (1); 
@@ -209,9 +221,10 @@ int number_of_commas(char *line)
 int check_content(int fd)
 {
     char (*line) = get_next_line(fd);
-	char (*tmp) = NULL;
 	int (key) = 0;
+	char (*tmp) = NULL;
 	content()->map_flag = 0;
+	parse()->flag = 0;
 	while (line)
 	{
 		if (ft_empty_line(line, 'N') && content()->map_flag == 0)
@@ -234,15 +247,16 @@ int check_content(int fd)
 			}
 			else if (key == 0)
 			{
-				if (ft_empty_line(line, 'M'))
-					return (1);
-				tmp = ft_trim_whitespace(line);
 				if (content()->tex_num != 4 || content()->colors_num != 2)
 					return (1);
+				if (!ft_empty_line(line, 'M'))
+				{
+					tmp = ft_trim_whitespace(line);
+					content()->map_height++;
+					if ((size_t)content()->map_width < ft_strlen(tmp))
+						content()->map_width = ft_strlen(tmp);
+				}
 				content()->map_flag = 1;
-				content()->map_height++;
-				if ((size_t)content()->map_width < ft_strlen(line))
-					content()->map_width = ft_strlen(line);
 			}
 			else
 				return (1);
