@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
-SRC = main.c conf_file_pars.c pars_map.c gc.c
+SRC = main.c conf_file_pars.c pars_map.c gc.c validate_map.c
 
 OBJ = $(SRC:.c=.o)
 NAME = cub3D

@@ -38,7 +38,7 @@ void add_line(char *line, int *i)
         j++;
         y++;
     }
-    content()->map[(*i)][y] = 'k';
+    content()->map[(*i)][y] = 'K';
 }
 
 int parse_map(int fd)
@@ -68,12 +68,14 @@ int parse_map(int fd)
                 content()->invalid = 1;
             else if (content()->invalid == 0)
             {
+                if (invalid_char(line) == 1)
+                    return (1);
                 content()->map_flag = 1;
                 content()->map[i] = ft_calloc(content()->map_width + 3 , sizeof(char));
                 if (!content()->map[i])
                     return (1);
                 content()->map[i][content()->map_width + 2] = '\0';
-                content()->map[i][0] = 'k';
+                content()->map[i][0] = 'K';
                 add_line(line, &i);
             }
             if (!ft_empty_line(line, 'M') && content()->invalid == 1)

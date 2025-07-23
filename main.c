@@ -168,9 +168,11 @@ int main(int ac, char **av)
     fd = open(av[1], O_RDONLY);
     if (parse_map(fd) == 1)
         error("Error\nNot a valid map\n");
-    printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
-    printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
-    printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
+    // if (valid_map() == 1)
+    //     error("Error\nNot a valid map\n");
+    // printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
+    // printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
+    // printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
     print_map();
     close(fd);
     gc_collect();

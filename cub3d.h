@@ -66,5 +66,6 @@ void	gc_register(void *ptr);
 void	*gc_malloc(size_t size);
 void	gc_collect(void);
 t_parse   *parse(void);
+int invalid_char();
 
 # endif
