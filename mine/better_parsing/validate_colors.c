@@ -128,6 +128,8 @@ int check_colors(char *line)
     if (commas != 2)
         return (0);
     str = ft_split(line, " ,");
+    if (!str || ft_arrlen(str) != 4)
+        return (0);
     i = 1;
     while (str[i])
     {

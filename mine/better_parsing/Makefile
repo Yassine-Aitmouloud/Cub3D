@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = 
 SRC = cub3d.c parse_file.c gc.c validate_texturs.c validate_colors.c
 
 OBJ = $(SRC:.c=.o)

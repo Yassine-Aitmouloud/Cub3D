@@ -106,13 +106,21 @@ int valid_content(char *file)
             }
             else if (key == 0)
             {
-                parse()->map_flag = 1;
                 if (number_of_content() != 6)
                     return (0);
-                content()->map_height++;
-                line = ft_strtrim(line, "\n");
-                if ((size_t)content()->map_width < ft_strlen(line))
-                    content()->map_width = ft_strlen(line);
+                if (empty_line(line) == 1)
+                {
+                    printf("d5elt\n");
+                    parse()->map_end = 1;
+                }
+                else if (parse()->map_end == 0)
+                {
+                    parse()->map_flag = 1;
+                    content()->map_height++;
+                    line = ft_strtrim(line, "\n");
+                    if ((size_t)content()->map_width < ft_strlen(line))
+                        content()->map_width = ft_strlen(line);
+                }
             }
             else if (key == 3)
 		        return (0);

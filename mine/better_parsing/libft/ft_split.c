@@ -141,10 +141,10 @@ char	**ft_make(char const *s, char *c, char **ptr, size_t len)
 char	**ft_split(char const *s, char *c)
 {
 	size_t	len;
-	size_t	i;
+	// size_t	i;
 	char	**ptr;
 
-	i = 0;
+	// i = 0;
 	if (!s)
 		return (NULL);
 	len = ft_count_word(s, c);

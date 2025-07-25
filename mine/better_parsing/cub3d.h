@@ -37,7 +37,6 @@ typedef struct file_content
     int green;
     int blue;
     t_garcol *g_head;
-    int invalid;
     int x;
     int y;
 } t_content;
@@ -55,6 +54,7 @@ typedef struct s_parse
     int flag;
 	int tex_num;
     int colors_num;
+    int map_end;
 } t_parse;
 
 // int check_file_name(char *argv , char *extention);
