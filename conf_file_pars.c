@@ -102,9 +102,7 @@ int check_textures(char *line)
 		parse()->no = 1;
 		str = ft_split(tmp, " ");
 		if (get_texture_no(str))
-		{
 			return (1);
-		}
 	}
 	else if (ft_strncmp(tmp, "SO ", 3) == 0)
 	{
@@ -132,29 +130,33 @@ int check_textures(char *line)
 
 int get_colors(int *i, char **s)
 {
-	while (s[(*i)])
+	int (y) = 0;
+	char (**str) = ft_split(s[(*i)], ",");
+	if (!str)
+		return (1);
+	while (str[y])
 	{
-		if (is_num(s[(*i)]))
+		if (is_num(str[y]))
 			return (1);
-		if (*i == 1)
+		if (y == 0)
 		{
-			content()->red = ft_atoi(s[(*i)]);
+			content()->red = ft_atoi(str[y]);
 			if (content()->red < 0 || content()->red > 255)
 				return (1);
 		}
-		else if (*i ==  2)
+		else if (y ==  1)
 		{
-			content()->green = ft_atoi(s[(*i)]);
+			content()->green = ft_atoi(str[y]);
 			if (content()->green < 0 || content()->green > 255)
 				return (1);
 		}
-		else if (*i ==  3)
+		else if (y ==  2)
 		{
-			content()->blue = ft_atoi(s[(*i)]);
+			content()->blue = ft_atoi(str[y]);
 			if (content()->blue < 0 || content()->blue > 255)
 				return (1);
 		}
-		(*i)++;
+		y++;
 	}
 	return (0);
 }
@@ -176,29 +178,37 @@ void get_floor_color()
 
 int check_colors(char *line)
 {
-	char (*tmp) = ft_trim_whitespace(line);
-	char (**s) = ft_split(tmp, " ,");
+	// char (*tmp) = ft_trim_whitespace(line);
+	// char (*tmp) = ft_strtrim(line, " ");
+	char (**s) = ft_split(line, " ");
 	int (i) = 0;
+	parse()->flag_c_f = 0;
+	if (parse()->flag == 0)
+	{
+		parse()->c = 0;
+		parse()->f = 0;
+		parse()->flag_c_f = 1;
+	}
 	if (s == NULL)
 		return (1);
-	if (ft_arrlen(s) != 4)
-		return (1);
-	while (s[i])
+	if ()
+	// if (ft_arrlen(s) != 2)
+	// 	return (1);
+	if (ft_strcmp(s[i] , "C"))
 	{
-		if (ft_strcmp(s[i] , "C"))
-		{
-			i++;
-			if (get_colors(&i, s))
-				return (1);
-			get_ceiling_color();
-		}
-		else if (ft_strcmp(s[i], "F"))
-		{
-			i++;
-			if (get_colors(&i, s))
-				return (1);
-			get_floor_color();
-		}
+		i++;
+		if (get_colors(&i, s))
+			return (1);
+		parse()->c++;
+		get_ceiling_color();
+	}
+	else if (ft_strcmp(s[i], "F"))
+	{
+		i++;
+		if (get_colors(&i, s))
+			return (1);
+		parse()->f++;
+		get_floor_color();
 	}
 	return (0);
 }
@@ -209,8 +219,12 @@ int number_of_commas(char *line)
 	int (y) = 0;
 	while (line[i])
 	{
-		if (line[i] == ',')
+		if (line[i] == ',' && ft_isdigit(line[i + 1]))
 			y++;
+		else if (line[i] == ',' && line[i + 1] == '\0')
+			return (1);
+		else if (line[i] == ',' && line[i + 1] == ',')
+			return (1);
 		i++;
 	}
 	if (y != 2)
@@ -222,11 +236,11 @@ int check_content(int fd)
 {
     char (*line) = get_next_line(fd);
 	int (key) = 0;
-	char (*tmp) = NULL;
 	content()->map_flag = 0;
 	parse()->flag = 0;
 	while (line)
 	{
+		line[ft_strlen(line) - 1] = '\0';
 		if (ft_empty_line(line, 'N') && content()->map_flag == 0)
 		{
 			line = get_next_line(fd);
@@ -251,10 +265,9 @@ int check_content(int fd)
 					return (1);
 				if (!ft_empty_line(line, 'M'))
 				{
-					tmp = ft_trim_whitespace(line);
 					content()->map_height++;
-					if ((size_t)content()->map_width < ft_strlen(tmp))
-						content()->map_width = ft_strlen(tmp);
+					if ((size_t)content()->map_width < (ft_strlen(line)))
+						content()->map_width = ft_strlen(line);
 				}
 				content()->map_flag = 1;
 			}

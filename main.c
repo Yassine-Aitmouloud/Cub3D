@@ -134,12 +134,14 @@ void print_map()
     }
 }
 
-int ft_rep_tex()
+int ft_rep_t_c()
 {
     if (parse()->no != 1
         || parse()->so != 1
         || parse()->we != 1
-        || parse()->ea != 1)
+        || parse()->ea != 1
+        || parse()->c != 1
+        || parse()->f != 1)
         return (1);
     return (0);
 }
@@ -160,7 +162,7 @@ int main(int ac, char **av)
         return (1); 
     if (check_content(fd) == 1)
         error("Error\nNot a valid content\n");
-    if (ft_rep_tex())
+    if (ft_rep_t_c())
         error("Error\nNot a valid content\n");
     if (content()->map_height <= 2 || content()->map_width <= 2)
         error("Error\nNot a valid map\n");
@@ -168,8 +170,11 @@ int main(int ac, char **av)
     fd = open(av[1], O_RDONLY);
     if (parse_map(fd) == 1)
         error("Error\nNot a valid map\n");
-    // if (valid_map() == 1)
-    //     error("Error\nNot a valid map\n");
+    // if (invalid_char() == 1)
+    //     error("Error\nMore then one player\n");
+    if (valid_map() == 1)
+        error("Error\nNot a valid map\n");
+    // printf("x: %d, y: %d, player: %c\n", content()->x, content()->y, content()->map[content()->y][content()->x]);
     // printf("height: %d, width: %d\n", content()->map_height, content()->map_width);
     // printf("%s, %s, %s, %s\n", content()->no_texture, content()->so_texture, content()->ea_texture, content()->we_texture);
     // printf("%d, %d\n", content()->ceiling_color, content()->floor_color);
