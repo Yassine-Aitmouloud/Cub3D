@@ -1,5 +1,5 @@
 NAME = Cub3d
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g3 -Wall -Wextra -Werror -Werror
 CC = cc
 
 Cubfiles = src/main.c src/utils.c
@@ -26,7 +26,7 @@ OBJ_libft = $(libftfiles:.c=.o)
 all: $(NAME)
 
 $(NAME) : $(OBJ_cub) $(OBJ_libft)
-	$(CC) $(OBJ_cub) $(OBJ_libft) -lmlx -lXext -lX11 -o $(NAME)
+	$(CC) $(OBJ_cub) $(OBJ_libft) -lmlx -Lmlx -lXext -lX11 -o $(NAME)
 
 
 clean:
