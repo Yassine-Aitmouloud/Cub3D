@@ -6,12 +6,12 @@
 #    By: abenba <abenba@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/25 07:46:39 by abenba            #+#    #+#              #
-#    Updated: 2025/07/25 15:30:04 by abenba           ###   ########.fr        #
+#    Updated: 2025/07/26 08:54:01 by abenba           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
-CFLAGS = 
+CFLAGS = -Wall -Wextra -Werror -g3 
 CC = cc
 CFILES = ft_atoi.c ft_isascii.c ft_memcmp.c ft_putendl_fd.c ft_strdup.c ft_strlen.c ft_strtrim.c \
 ft_bzero.c ft_isdigit.c ft_memcpy.c ft_putnbr_fd.c ft_striteri.c ft_strmapi.c ft_substr.c \

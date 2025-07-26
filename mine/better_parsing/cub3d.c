@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:07:29 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/25 17:56:35 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/26 11:41:22 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ int main(int ac, char **av)
 	}
 	if (check_file(av[1]) == 0)
 		error("Error\nInvalid file name or content\n");
+	if (valid_map(av[1]) == 0)
+		error("Error\nInvalid Map\n");
 	print_content();
 	gc_collect();
 }

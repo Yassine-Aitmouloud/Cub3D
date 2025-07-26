@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:13:04 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/25 17:58:56 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/26 11:39:15 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,12 @@ int valid_content(char *file)
     line = get_next_line(fd);
     while (line)
     {
-        if (empty_line(line) == 0)
+        if (empty_line(line) == 1 && parse()->map_flag == 0)
+        {
+            line = get_next_line(fd);
+            continue ;
+        }
+        else
         {
             tmp = ft_strtrim(line, " \n");
             key = add_key(tmp);
@@ -109,10 +114,7 @@ int valid_content(char *file)
                 if (number_of_content() != 6)
                     return (0);
                 if (empty_line(line) == 1)
-                {
-                    printf("d5elt\n");
                     parse()->map_end = 1;
-                }
                 else if (parse()->map_end == 0)
                 {
                     parse()->map_flag = 1;
@@ -121,12 +123,15 @@ int valid_content(char *file)
                     if ((size_t)content()->map_width < ft_strlen(line))
                         content()->map_width = ft_strlen(line);
                 }
+                else
+                    return (0);
             }
             else if (key == 3)
 		        return (0);
         }
         line = get_next_line(fd);
     }
+    close(fd);
     return (1);
 }
 
