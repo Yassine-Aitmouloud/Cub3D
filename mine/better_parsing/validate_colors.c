@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 15:48:32 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/25 17:45:24 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/27 14:23:36 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,16 @@ int number_of_commas(char *color)
     int i;
     int commas;
     int digit;
+    int len;
+    int end_with_comma;
 
     i = 0;
     commas = 0;
     digit = 0;
+    end_with_comma = 0;
+    len = ft_strlen(color);
+    if (color[len - 1] == ',')
+        end_with_comma = 1;
     while (color[i] == ' ')
         i++;
     if (color[i] == 'C' || color[i] == 'F')
@@ -42,7 +48,7 @@ int number_of_commas(char *color)
             i++;
         }
     }
-    return (commas);
+    return (commas + end_with_comma);
 }
 
 int valid_number(char *color)
@@ -110,9 +116,9 @@ void floor_color(char **str)
 
 void all_colors(char *identifier)
 {
-    if (!ft_strcmp(identifier, "C") && parse()->c == 0)
+    if (!ft_strcmp(identifier, "C"))
         parse()->c++;
-    else if (!ft_strcmp(identifier, "F") && parse()->f == 0)
+    else if (!ft_strcmp(identifier, "F"))
         parse()->f++;
 }
 

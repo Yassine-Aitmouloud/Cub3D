@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:06 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/26 11:41:35 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/27 14:47:56 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,9 @@ typedef struct s_parse
 	int tex_num;
     int colors_num;
     int map_end;
+    int wall_len;
+    int len_up;
+    int len_down;
 } t_parse;
 
 // int check_file_name(char *argv , char *extention);
@@ -73,6 +76,8 @@ int			check_texturs(char *line);
 int         check_colors(char *line);
 void        floor_color(char **str);
 int         valid_map(char *file);
+int         player_number();
+int         valid_H_W_walls();
 // int check_content(int fd);
 // int ft_empty_line(const char *line, char c);
 // t_content   *content(void);

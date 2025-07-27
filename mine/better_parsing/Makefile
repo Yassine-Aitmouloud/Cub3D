@@ -1,6 +1,6 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3
-SRC = cub3d.c parse_file.c gc.c validate_texturs.c validate_colors.c
+SRC = cub3d.c parse_file.c gc.c validate_texturs.c validate_colors.c validate_map.c
 
 OBJ = $(SRC:.c=.o)
 NAME = cub3D

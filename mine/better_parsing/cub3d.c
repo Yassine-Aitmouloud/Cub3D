@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:07:29 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/26 11:41:22 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/27 15:08:51 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,22 @@ t_parse *parse()
 void	error(char *msg)
 {
 	write (2, msg, ft_strlen(msg));
+	gc_collect();
 	exit (EXIT_FAILURE);
 }
 
 void print_content()
 {
+	int (i) = 0;
 	printf("NO: %s\nSO: %s\nWE: %s\nEA: %s\n", content()->no_texture, content()->so_texture, content()->we_texture, content()->ea_texture);
 	printf("red: %d\ngreen: %d\nblue: %d\n", content()->red, content()->green, content()->blue);
 	printf("ceiling_color: %d\nfloor_color: %d\n", content()->ceiling_color, content()->floor_color);
 	printf("map_height: %d\nmap_width: %d\n", content()->map_height, content()->map_width);
+	while (content()->map[i])
+	{
+		printf("%s\n", content()->map[i]);
+		i++;
+	}
 }
 
 int main(int ac, char **av)
@@ -46,8 +53,10 @@ int main(int ac, char **av)
 	}
 	if (check_file(av[1]) == 0)
 		error("Error\nInvalid file name or content\n");
-	if (valid_map(av[1]) == 0)
+	if (valid_map(av[1]) == 0 || valid_H_W_walls() == 0)
 		error("Error\nInvalid Map\n");
+	if (player_number() == 0)
+        error("Error\nInvalid Map Character\n");
 	print_content();
 	gc_collect();
 }

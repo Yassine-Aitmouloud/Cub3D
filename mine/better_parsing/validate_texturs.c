@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:43:34 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/25 17:46:44 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/27 10:05:06 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,13 @@ int get_tex(char **tex)
 
 void all_texturs(char *identifier)
 {
-	if (!ft_strcmp(identifier, "NO") && parse()->no == 0)
+	if (!ft_strcmp(identifier, "NO"))
 		parse()->no++;
-	else if (!ft_strcmp(identifier, "SO") && parse()->so == 0)
+	else if (!ft_strcmp(identifier, "SO"))
 		parse()->so++;
-	else if (!ft_strcmp(identifier, "WE") && parse()->we == 0)
+	else if (!ft_strcmp(identifier, "WE"))
 		parse()->we++;
-	else if (!ft_strcmp(identifier, "EA") && parse()->ea == 0)
+	else if (!ft_strcmp(identifier, "EA"))
 		parse()->ea++;
 }
 
