@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:07:29 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/27 15:08:51 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/28 20:53:08 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,8 @@ int main(int ac, char **av)
 		error("Error\nInvalid file name or content\n");
 	if (valid_map(av[1]) == 0 || valid_H_W_walls() == 0)
 		error("Error\nInvalid Map\n");
-	if (player_number() == 0)
-        error("Error\nInvalid Map Character\n");
+	// if (player_number() == 0)
+    //     error("Error\nInvalid Map Character\n");
 	print_content();
 	gc_collect();
 }

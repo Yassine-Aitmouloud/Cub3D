@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 17:48:09 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/28 13:27:32 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/28 20:55:09 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,42 @@ int valid_map_line(char *line)
     return (1);
 }
 
+void change_space(int i)
+{
+    int (y) = 0;
+    while (content()->map[i][y])
+    {
+        if (content()->map[i][y] == ' ')
+            content()->map[i][y] = 's';
+        else if (content()->map[i][y] == '1')
+        {
+            y++;
+            while (content()->map[i][y])
+            {
+                if (content()->map[i][y] == '1')
+                {
+                    y++;
+                    break;
+                }
+                y++;
+            }
+            continue ;
+        }
+        y++;
+    }
+}
+
 void add_line(char *line)
 {
     static int (i) = 0;
-    int (y) = 0;
     int (j) = 0;
-    while (content()->map[i][j])
+    int line_len = ft_strlen(line);
+    while (j < line_len)
     {
-        if (line[y] == ' ')
-            content()->map[i][j] = '1';
-        else
-            content()->map[i][j] = line[y]; 
-        y++;
+        content()->map[i][j] = line[j]; 
         j++;
     }
+    change_space(i);
     i++;
 }
 
@@ -75,7 +97,7 @@ int valid_map(char *file)
             if (key == 0)
             {
                 line = ft_strtrim(line, "\n");
-                content()->map[i] = ft_calloc(ft_strlen(line) + 1, sizeof(char));
+                content()->map[i] = gc_malloc(ft_strlen(line) + 1);
                 if (!content()->map[i])
                     return (0);
                 content()->map[i][ft_strlen(line)] = '\0';
@@ -96,18 +118,32 @@ int wall_up_down()
     parse()->len_down = ft_strlen(content()->map[content()->map_height - 1]) - 1;
     while (content()->map[0][i])
     {
-        if (content()->map[0][i] != '1')
-            return (0);  
-        i++;
+        if (content()->map[0][i] == 's')
+            i++;
+        else if (content()->map[0][i] != '1')
+            return (0);
+        else
+            i++;
     }
     i = 0;
     while (content()->map[content()->map_height - 1][i])
     {
-        if (content()->map[content()->map_height - 1][i] != '1')
+        if (content()->map[content()->map_height - 1][i] == ' ')
+            i++;
+        else if (content()->map[content()->map_height - 1][i] != '1')
             return (0);
-        i++;
+        else
+            i++;
     }
     return (1);
+}
+
+int skip_space(char *line)
+{
+    int (i) = 0;
+    while (line[i] == 's')
+        i++;
+    return (i);
 }
 
 int wall_left_right()
@@ -115,10 +151,12 @@ int wall_left_right()
     int line_len;
     
     int (i) = 1;
+    int (first); 
     while (i < content()->map_height - 1)
     {
         line_len = ft_strlen(content()->map[i]);
-        if (content()->map[i][0] != '1'
+        first = skip_space(content()->map[i]);
+        if (content()->map[i][first] != '1'
             || content()->map[i][line_len - 1] != '1')
             return (0);
         i++;
@@ -126,54 +164,145 @@ int wall_left_right()
     return (1);
 }
 
-int get_last_zero(char *line)
+// int get_last_zero(char *line)
+// {
+//     int i = ft_strlen(line) - 1;
+//     while (i > 0)
+//     {
+//         if (line[i] == '0')
+//             return (i);
+//         i--;
+//     }
+//     return (i);
+// }
+// int get_len(int i, char *str)
+// {
+//     int y;
+
+//     if (ft_strcmp(str, "UP"))
+//         y = ft_strlen(content()->map[i]) - ft_strlen(content()->map[i - 1]);
+//     else
+//         y = ft_strlen(content()->map[i]) - ft_strlen(content()->map[i + 1]);
+//     return (y); 
+// }
+
+// int zero_inside()
+// {
+//     int (i) = 1;
+//     int zero_position;
+//     int valid_len_u;
+//     int valid_len_d;
+//     while (i < content()->map_height - 1)
+//     {
+//         zero_position = get_last_zero(content()->map[i]);
+//         valid_len_u = get_len(i, "UP");
+//         valid_len_d = get_len(i, "DOWN");
+//         if (zero_position > 0)
+//         {
+//             if (zero_position > parse()->len_down
+//                 && zero_position > parse()->len_up)
+//                 {
+//                     if (content()->map[i - 1][zero_position] != '1'
+//                         && content()->map[i + 1][zero_position] != '1')
+//                         if (((valid_len_u != 1 && valid_len_u != -1)
+//                             && (valid_len_d != 1 && valid_len_d != -1))
+//                             || (valid_len_d == 0 && valid_len_u != 1 && valid_len_u != -1)
+//                             || (valid_len_u == 0 && valid_len_d != 1 && valid_len_d != -1))
+//                             return (0);
+//                 }
+//             if (zero_position > ((int)ft_strlen(content()->map[i + 1]) - 1))
+//                 return (0);
+//         }
+//         i++;
+//     }
+//     return (1);
+// }
+
+int up(int i, int y)
 {
-    int i = ft_strlen(line) - 1;
-    while (i > 0)
+    int (j) = i - 1;
+    while (j >= 0)
     {
-        if (line[i] == '0')
-            return (i);
-        i--;
+        if (content()->map[j][y] == '1')
+            break ;
+        j--;
     }
-    return (i);
-}
-int get_len(int i, char *str)
-{
-    int y;
-
-    if (ft_strcmp(str, "UP"))
-        y = ft_strlen(content()->map[i]) - ft_strlen(content()->map[i - 1]);
+    if (j == -1)
+        return (0);
     else
-        y = ft_strlen(content()->map[i]) - ft_strlen(content()->map[i + 1]);
-    return (y); 
+        return (1);
 }
 
-int zero_inside()
+int left(int i, int y)
+{
+    int (j) = y - 1;
+    while (j >= 0)
+    {
+        if (content()->map[i][j] == '1')
+            break ;
+        j--;
+    }
+    if (j == -1)
+        return (0);
+    else
+        return (1);
+}
+
+int right(int i, int y, int line_len)
+{
+    int (j) = y + 1;
+    
+    while (content()->map[i][j])
+    {
+        if (content()->map[i][j] == '1')
+            break ;
+        j++;
+    }
+    if (j > line_len)
+        return (0);
+    else
+        return (1);
+}
+
+int down(int i, int y)
+{
+    int (j) = i + 1;
+    while (content()->map[j])
+    {
+        if (content()->map[j][y] == '1')
+            break ;
+        j++;
+    }
+    if (j > content()->map_height - 1)
+        return (0);
+    else
+        return (1);
+}
+
+int closed()
 {
     int (i) = 1;
-    int zero_position;
-    int valid_len_u;
-    int valid_len_d;
-    while (i < content()->map_height - 1)
+    int line_len;
+    
+    int (j);
+    while (i < content()->map_height - 2)
     {
-        zero_position = get_last_zero(content()->map[i]);
-        valid_len_u = get_len(i, "UP");
-        valid_len_d = get_len(i, "DOWN");
-        if (zero_position > 0)
+        j = 0;
+        line_len = ft_strlen(content()->map[i]);
+        while (content()->map[i][j])
         {
-            if (zero_position > parse()->len_down
-                && zero_position > parse()->len_up)
-                {
-                    if (content()->map[i - 1][zero_position] != '1'
-                        && content()->map[i + 1][zero_position] != '1')
-                        if (((valid_len_u != 1 && valid_len_u != -1)
-                            && (valid_len_d != 1 && valid_len_d != -1))
-                            || (valid_len_d == 0 && valid_len_u != 1 && valid_len_u != -1)
-                            || (valid_len_u == 0 && valid_len_d != 1 && valid_len_d != -1))
-                            return (0);
-                }
-            if (zero_position > ((int)ft_strlen(content()->map[i + 1]) - 1))
-                return (0);
+            if (content()->map[i][j] == '0')
+            {
+                if (up(i, j) == 0)
+                    return (0);
+                if (left(i, j) == 0)
+                    return (0);
+                if (right(i, j, line_len - 1) == 0)
+                    return (0);
+                if (down(i, j) == 0)
+                    return (0);
+            }
+            j++;
         }
         i++;
     }
@@ -185,12 +314,14 @@ int valid_H_W_walls()
     if (content()->map_height <= 2
         || content()->map_width <= 2)
         return (0);
-    if (wall_up_down() == 0)
-        return (0);
-    if (wall_left_right() == 0)
-        return (0);
-    if (zero_inside() == 0)
-        return (0);
+    // if (wall_up_down() == 0)
+    //     return (0);
+    // if (wall_left_right() == 0)
+    //     return (0);
+    // if (closed() == 0)
+    //     return (0);
+    // if (zero_inside() == 0)
+    //     return (0);
     return (1);
 }
 
@@ -206,13 +337,16 @@ int player_number()
         {
             if (content()->map[i][y] != '1'
                 && content()->map[i][y] != '0'
-                && content()->map[i][y] != ' ')
+                && content()->map[i][y] != 's')
                 player++;
             y++;
         }
         i++;
     }
     if (player != 1)
+    {
+        printf("%d\n", player);
         return (0);
+    }
     return (1);
 }
