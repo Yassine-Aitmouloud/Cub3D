@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:06 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/27 14:47:56 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/28 10:59:46 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ typedef struct s_parse
 	int tex_num;
     int colors_num;
     int map_end;
-    int wall_len;
     int len_up;
     int len_down;
 } t_parse;

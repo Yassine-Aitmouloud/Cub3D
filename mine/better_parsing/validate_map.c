@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 17:48:09 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/27 15:15:01 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/28 13:27:32 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int valid_map(char *file)
 int wall_up_down()
 {
     int (i) = 0;
+    parse()->len_up = ft_strlen(content()->map[0]) - 1;
+    parse()->len_down = ft_strlen(content()->map[content()->map_height - 1]) - 1;
     while (content()->map[0][i])
     {
         if (content()->map[0][i] != '1')
@@ -124,6 +126,60 @@ int wall_left_right()
     return (1);
 }
 
+int get_last_zero(char *line)
+{
+    int i = ft_strlen(line) - 1;
+    while (i > 0)
+    {
+        if (line[i] == '0')
+            return (i);
+        i--;
+    }
+    return (i);
+}
+int get_len(int i, char *str)
+{
+    int y;
+
+    if (ft_strcmp(str, "UP"))
+        y = ft_strlen(content()->map[i]) - ft_strlen(content()->map[i - 1]);
+    else
+        y = ft_strlen(content()->map[i]) - ft_strlen(content()->map[i + 1]);
+    return (y); 
+}
+
+int zero_inside()
+{
+    int (i) = 1;
+    int zero_position;
+    int valid_len_u;
+    int valid_len_d;
+    while (i < content()->map_height - 1)
+    {
+        zero_position = get_last_zero(content()->map[i]);
+        valid_len_u = get_len(i, "UP");
+        valid_len_d = get_len(i, "DOWN");
+        if (zero_position > 0)
+        {
+            if (zero_position > parse()->len_down
+                && zero_position > parse()->len_up)
+                {
+                    if (content()->map[i - 1][zero_position] != '1'
+                        && content()->map[i + 1][zero_position] != '1')
+                        if (((valid_len_u != 1 && valid_len_u != -1)
+                            && (valid_len_d != 1 && valid_len_d != -1))
+                            || (valid_len_d == 0 && valid_len_u != 1 && valid_len_u != -1)
+                            || (valid_len_u == 0 && valid_len_d != 1 && valid_len_d != -1))
+                            return (0);
+                }
+            if (zero_position > ((int)ft_strlen(content()->map[i + 1]) - 1))
+                return (0);
+        }
+        i++;
+    }
+    return (1);
+}
+
 int valid_H_W_walls()
 {
     if (content()->map_height <= 2
@@ -132,6 +188,8 @@ int valid_H_W_walls()
     if (wall_up_down() == 0)
         return (0);
     if (wall_left_right() == 0)
+        return (0);
+    if (zero_inside() == 0)
         return (0);
     return (1);
 }
