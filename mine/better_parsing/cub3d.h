@@ -6,7 +6,7 @@
 /*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:06 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/28 10:59:46 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/29 15:09:16 by abenba           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define CUB_H
 
 # include "libft/libft.h"
-
+# include <stdbool.h>
 typedef struct t_GC
 {
     void *ptr;
@@ -77,6 +77,8 @@ void        floor_color(char **str);
 int         valid_map(char *file);
 int         player_number();
 int         valid_H_W_walls();
+void        print_content();
+void        flood_fill(char** map, int width, int height, int start_x, int start_y);
 // int check_content(int fd);
 // int ft_empty_line(const char *line, char c);
 // t_content   *content(void);
