@@ -4,6 +4,7 @@
 #define WIDTH 1920
 #define HEIGHT 1080
 #define TILE_SIZE 64
+#define M_PI 3.141592653589793238462643383279502984
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -32,8 +33,17 @@ enum Direction {
 
 typedef struct s_player
 {
-    int	x;
-    int	y;
+    double	px;
+    double	py;
+    double	ray_x;
+    double	ray_y;
+	double dx;
+	double dy;
+	double pov;
+	double angle;
+	double ray_angle;
+	double dist;
+	double projection;
 	enum Direction vue;
 }   t_player;
 
@@ -60,16 +70,19 @@ typedef struct s_cub
 	void	*sky;
 	void	*flor;
 	char	**map;
+	int x;
+	int y;
     
 } t_cup;
+void	cast_rays();
 
+void	draw(int wall_height, int col);
+void	pixel_put(int x, int y, int color);
 void    game_init();
 t_cup	*g_game(void);
 int	ft_close();
 int get_the_vue(char **map,int i, int j);
 void	find_player_position(char **map);
-void	put_images(int i, int j);
-void	create_images();
 void	start_game();
 
 

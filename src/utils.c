@@ -29,8 +29,8 @@ void	find_player_position(char **map)
 		{
 			if (get_the_vue(map,i,j) == 0 || map[i][j] == 'P')
 			{
-				g_game()->info.x = j;
-				g_game()->info.y = i;
+				g_game()->info.px = j;
+				g_game()->info.py = i;
 				return ;
 			}
 			j++;
@@ -39,50 +39,58 @@ void	find_player_position(char **map)
 	}
 }
 
-void	put_images(int i, int j)
+void	draw(int wall_height,int x)
 {
-	if (map[i][j] == '1')
-		mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->wall, j * 64, i
-			* 64);
-	else if (map[i][j] == 'P')
-		mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->player, j * 64, i
-			* 64);
-	else
-		mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->flor, j * 64, i
-			* 64);
+	int y;
+	int start;
+	int end;
+	start = (HEIGHT / 2) - (wall_height / 2);
+	end = (HEIGHT / 2) + (wall_height / 2);
+	y = start;
+	printf("->start = %d",start);
+	while(y < end && y < HEIGHT)
+	{
+		pixel_put(x, abs(y),0xFFFF00);
+		y++;
+	}
 }
 
-void	create_images()
+void	cast_rays(int col)
 {
-	g_game()->wall = mlx_xpm_file_to_image(g_game()->mlx,"/home/yaaitmou/Desktop/Cub3D/textures/wall.xpm",&g_game()->sizes.wall,&g_game()->sizes.wall);
-	if (!g_game()->wall)
-		printf("hello\n");
-	g_game()->player = mlx_xpm_file_to_image(g_game()->mlx,"/home/yaaitmou/Desktop/Cub3D/textures/coin.xpm",&g_game()->sizes.w_player,&g_game()->sizes.h_player);
-	if (!g_game()->player)
-		printf("player\n");
-	g_game()->flor = mlx_xpm_file_to_image(g_game()->mlx,"/home/yaaitmou/Desktop/Cub3D/textures/space.xpm",&g_game()->sizes.wall,&g_game()->sizes.wall);
-	if (!g_game()->flor)
-		printf("flor\n");
+	g_game()->info.ray_x = g_game()->info.px;
+	g_game()->info.ray_y = g_game()->info.py;
+	g_game()->info.dx = cos(g_game()->info.ray_angle);
+	g_game()->info.dy = sin(g_game()->info.ray_angle);
+	while(1)
+	{
+		g_game()->info.ray_x += g_game()->info.dx;
+		g_game()->info.ray_y += g_game()->info.dy;
+		g_game()->x = (int)(g_game()->info.ray_x / TILE_SIZE);
+		g_game()->y = (int)(g_game()->info.ray_y / TILE_SIZE);
+		if (map[g_game()->y][g_game()->x] == '1')
+			break;
+	}
+	g_game()->info.dist = sqrt((g_game()->info.ray_x - g_game()->info.px)*(g_game()->info.ray_x - g_game()->info.px) + (g_game()->info.ray_y - g_game()->info.py)*(g_game()->info.ray_y - g_game()->info.py));
+	g_game()->info.dist = g_game()->info.dist * cos(g_game()->info.ray_angle - g_game()->info.angle);
+	int wall_height = (TILE_SIZE * g_game()->info.projection) / g_game()->info.dist;
+	draw(wall_height,col);
 }
 
 void	start_game()
 {
-	int	i = 0;
-	int	j = 0;
-
-	g_game()->sizes.w_player = 10;
-	g_game()->sizes.h_player = 14;
-	g_game()->sizes.wall = 64;
-
-	create_images();
-	while (map[i])
+	int col;
+	col = 0;
+	find_player_position(map);
+	g_game()->info.px = g_game()->info.px * TILE_SIZE + TILE_SIZE / 2;
+	g_game()->info.py = g_game()->info.py * TILE_SIZE + TILE_SIZE / 2;
+	g_game()->info.angle = 90 * M_PI / 180;
+	g_game()->info.pov = 60 * M_PI / 180;
+	g_game()->info.projection = (WIDTH / 2) / tan(g_game()->info.pov / 2);
+	while(col < WIDTH)
 	{
-		j = 0;
-		while (map[i][j])
-		{
-			put_images(i, j);
-			j++;
-		}
-		i++;
+		g_game()->info.ray_angle = (g_game()->info.angle - (g_game()->info.pov / 2)) + (col * (g_game()->info.pov / WIDTH));
+		cast_rays(col);
+		// printf("->>> col = %d",col);
+		col++;
 	}
 }

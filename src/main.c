@@ -12,6 +12,7 @@
 //     width--;
 // }
 #include "../includes/cub.h"
+
 char *mapp[] = {
     "11111111111111111111111111",
     "10111111110111111100010001",
@@ -49,12 +50,16 @@ void    game_init()
     g_game()->mlx = mlx_init();
     g_game()->win = mlx_new_window(g_game()->mlx,WIDTH,HEIGHT,"hallo");
     mlx_string_put(g_game()->mlx, g_game()->win, (WIDTH / 2) - 70, 20, 0xFFFFFF, "welcome to the game");
+    g_game()->img = mlx_new_image(g_game()->mlx,WIDTH,HEIGHT);
+    g_game()->addr = mlx_get_data_addr(g_game()->img,&g_game()->bits_per_pixel,
+            &g_game()->line_length,&g_game()->endian);
 }
 
 void	pixel_put(int x, int y, int color)
 {
 	char	*dst;
-
+    if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+		return;
 	dst = g_game()->addr + (y * g_game()->line_length + x * (g_game()->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
@@ -64,26 +69,11 @@ int main(int ac, char **av)
     (void)ac;
     (void)av;
     game_init();
-    // start_game();
-    g_game()->img = mlx_new_image(g_game()->mlx,WIDTH,HEIGHT);
-    g_game()->addr = mlx_get_data_addr(g_game()->img,&g_game()->bits_per_pixel,
-            &g_game()->line_length,&g_game()->endian);
-    int j = 800 ;
-    int i = 100 ;
-    while(j != 1500)
-    {
-        pixel_put(j, i, 0xFFFFFF);
-        i = 100;
-        while(i != 500)
-        {   
-            pixel_put(j, i,0xFF0000);
-            i++;
-        }
-        j++;
-    }
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
     mlx_hook(g_game()->win,CROSS,0,ft_close,NULL);
     mlx_key_hook(g_game()->win,close2,NULL);
+    start_game();
     mlx_loop(g_game()->mlx);
     return (0);
 }
+
