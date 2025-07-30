@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:06 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/29 15:09:16 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/30 17:05:30 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,21 @@ typedef struct s_parse
     int len_down;
 } t_parse;
 
+typedef struct point
+{
+    int x;
+    int y;
+} t_point;
+
+
+typedef struct queue
+{
+    t_point *data;
+    int front;
+    int back;
+    int capacity;
+} t_queue;
+
 // int check_file_name(char *argv , char *extention);
 void		error(char *msg);
 int			check_file(char *file);
@@ -78,7 +93,7 @@ int         valid_map(char *file);
 int         player_number();
 int         valid_H_W_walls();
 void        print_content();
-void        flood_fill(char** map, int width, int height, int start_x, int start_y);
+int         player_number();
 // int check_content(int fd);
 // int ft_empty_line(const char *line, char c);
 // t_content   *content(void);

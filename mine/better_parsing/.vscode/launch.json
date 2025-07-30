@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/cub3D",
-            "args": ["maps/anas.cub"],
+            "args": ["maps/yassine.cub"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

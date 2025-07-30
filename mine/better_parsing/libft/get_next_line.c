@@ -41,7 +41,6 @@ char	*fill_buffer(int fd, char *left, char *buffer)
 char	*make_line(char *left, char **line)
 {
 	int		i;
-	char	*tmp;
 
 	i = 0;
 	while (left[i] != '\n' && left[i] != '\0')
@@ -57,7 +56,6 @@ char	*make_line(char *left, char **line)
 	else if (left)
 	{
 		*line = ft_substr(left, 0, i + 1);
-		tmp = left;
 		left = ft_substr(left, i + 1, ft_strlen(left) - i);
 	}
 	return (left);

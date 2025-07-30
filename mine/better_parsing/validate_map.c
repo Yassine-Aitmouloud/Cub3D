@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validate_map.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 17:48:09 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/29 16:30:36 by abenba           ###   ########.fr       */
+/*   Updated: 2025/07/30 17:06:30 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,40 +124,88 @@ int check_space_inside(int i, int j)
 	return (1);
 }
 
-void change_space()
+int init_queue(t_queue *q, int capacity)
 {
-	int (y);
-	int i = 0;
-	while (content()->map[i])
-	{
-		y = 0;
-		while (content()->map[i][y])
-		{
-			if (content()->map[i][y] == ' ')
-				content()->map[i][y] = 's';
-			else if (content()->map[i][y] == '1')
-			{
-				y++;
-				while (content()->map[i][y])
-				{
-					if (content()->map[i][y] == '1')
-					{
-						y++;
-						break;
-					}
-					// if (content()->map[i][y] == ' ')
-					// {
-					//     if (check_space_inside(i, y) == 0)
-					//         break ;
-					// }
-					y++;
-				}
-				continue ;
-			}
-			y++;
-		}
-		i++;
-	}
+	q->data = gc_malloc(capacity * sizeof(t_point));
+	if (!q->data)
+		return (0);
+	q->front = 0;
+	q->back = -1;
+	q->capacity = capacity;
+	return (1);
+}
+
+void add_in_queue(t_queue *q, t_point point)
+{
+	if (q->back == q->capacity - 1)
+		return ;
+	q->data[++q->back] = point;
+}
+
+t_point out_of_queue(t_queue *q)
+{
+	return (q->data[q->front++]);
+}
+
+int is_empty(t_queue *q)
+{
+	return (q->front > q->back);
+}
+
+int change_space(int X, int Y, int height, int width)
+{
+    const t_point directions[] =  {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    t_point point;
+    t_point curr;
+    int i = 0;
+    int sx;
+    int sy;
+    char c;
+    point.x = X;
+    point.y = Y;
+    t_queue q;
+    bool **visited = gc_malloc(sizeof(bool*) * (height));
+    if (!visited)
+        return (0);
+    while (i < (height))
+    {
+        visited[i] = ft_calloc_algo(width, sizeof(bool));
+        if (!visited[i])
+            return (0);
+        i++;
+    }
+    if (init_queue(&q, (height * width)) == 0)
+        return (0);
+    add_in_queue(&q, point);
+    visited[X][Y] = true;
+    
+    while (!is_empty(&q))
+    {
+        curr = out_of_queue(&q);
+        if (content()->map[curr.x][curr.y] == ' ')
+            content()->map[curr.x][curr.y] = 's';
+        
+        i = 0;
+        while (i < 4)
+        {
+            sx = curr.x + directions[i].x;
+            sy = curr.y + directions[i].y;
+            if (sx >= 0 && sx < height && sy >= 0 && sy < width)
+            {
+                c = content()->map[sx][sy];
+                if (!visited[sx][sy] && c != '1' && c != '0' && 
+                    c != 'N' && c != 'E' && c != 'W' && c != 'S')
+                {
+                    visited[sx][sy] = true;
+                    point.x = sx;
+                    point.y = sy;
+                    add_in_queue(&q, point);
+                }
+            }
+            i++;
+        }
+    }
+    return (1);
 }
 
 void add_line(char *line)
@@ -259,18 +307,26 @@ int skip_space(char *line)
 	return (i);
 }
 
-int wall_left_right()
+int skip_last_spaces(char *line)
 {
-	int line_len;
-	
+	int (i) = ft_strlen(line) - 1;
+	while (i > 0 && line[i] == ' ')
+		i--;
+	return (i);
+}
+
+int wall_left_right()
+{	
 	int (i) = 1;
 	int (first); 
+	int (last);
 	while (i < content()->map_height + 1)
 	{
-		line_len = ft_strlen(content()->map[i]);
+		last = skip_last_spaces(content()->map[i]);
+
 		first = skip_space(content()->map[i]);
 		if (content()->map[i][first] != '1'
-			|| content()->map[i][line_len - 1] != '1')
+			|| content()->map[i][last] != '1')
 			return (0);
 		i++;
 	}
@@ -334,85 +390,56 @@ int wall_left_right()
 int up(int i, int y)
 {
 	int (j) = i - 1;
-	while (j >= 0)
-	{
-		if (content()->map[j][y] == '1')
-			break ;
-		if (content()->map[j][y] == 's')
-			return (0);
-		j--;
-	}
-	if (j == -1)
+	if (content()->map[j][y] == 's')
 		return (0);
-	else
-		return (1);
+	return (1);
 }
 
 int left(int i, int y)
 {
 	int (j) = y - 1;
-	while (j >= 0)
-	{
-		if (content()->map[i][j] == '1')
-			break ;
-		j--;
-	}
-	if (j == -1)
+	if (content()->map[i][j] == 's')
 		return (0);
-	else
-		return (1);
+	return (1);
 }
 
-int right(int i, int y, int line_len)
+int right(int i, int y)
 {
 	int (j) = y + 1;
-	
-	while (content()->map[i][j])
-	{
-		if (content()->map[i][j] == '1')
-			break ;
-		j++;
-	}
-	if (j > line_len)
+	if (content()->map[i][j] == 's')
 		return (0);
-	else
-		return (1);
+	return (1);
 }
 
 int down(int i, int y)
 {
 	int (j) = i + 1;
-	while (content()->map[j])
-	{
-		if (content()->map[j][y] == '1')
-			break ;
-		j++;
-	}
-	if (j > content()->map_height - 1)
+	if (content()->map[j][y] == 's')
 		return (0);
-	else
-		return (1);
+	return (1);
 }
 
 int closed()
 {
 	int (i) = 1;
-	int line_len;
 	
 	int (j);
 	while (i < content()->map_height + 1)
 	{
-		j = 0;
-		line_len = ft_strlen(content()->map[i]);
+		j = 1;
 		while (content()->map[i][j])
 		{
-			if (content()->map[i][j] == '0')
+			if (content()->map[i][j] == '0'
+				|| content()->map[i][j] == 'N'
+				|| content()->map[i][j] == 'S'
+				|| content()->map[i][j] == 'E'
+				|| content()->map[i][j] == 'W')
 			{
 				if (up(i, j) == 0)
 					return (0);
 				if (left(i, j) == 0)
 					return (0);
-				if (right(i, j, line_len - 1) == 0)
+				if (right(i, j) == 0)
 					return (0);
 				if (down(i, j) == 0)
 					return (0);
@@ -424,49 +451,17 @@ int closed()
 	return (1);
 }
 
-
-
-typedef struct {
-	int x;
-	int y;
-} Point;
-
-Point find_max()
-{
-	int j = 0;
-	int i = 0;
-	Point max = (Point) {i, j};
-	char **map = content()->map;
-
-	while (map[i])
-	{
-		j = 0;
-		while (map[i][j])
-		{
-			if (max.y < j)
-				max.y = j;
-			j++;
-		}
-	}
-	max.x = i;
-	return (max);
-}
-
 int valid_H_W_walls()
 {
 	if (content()->map_height <= 2
 		|| content()->map_width <= 2)
 		return (0);
-	// if (wall_up_down() == 0)
-	// 	return (0);
-	// if (wall_left_right() == 0)
-	// 	return (0);
-	flood_fill(content()->map, content()->map_width + 2, content()->map_height + 2, 0, 0);
-	// change_space();
+	if (player_number() == 0)
+		return (0);
+	if (change_space(0, 0, content()->map_height + 2, content()->map_width + 2) == 0)
+		return (0);
 	if (closed() == 0)
 	    return (0);
-	// if (zero_inside() == 0)
-	//     return (0);
 	return (1);
 }
 
@@ -482,83 +477,13 @@ int player_number()
 		{
 			if (content()->map[i][y] != '1'
 				&& content()->map[i][y] != '0'
-				&& content()->map[i][y] != 's')
+				&& content()->map[i][y] != ' ')
 				player++;
 			y++;
 		}
 		i++;
 	}
 	if (player != 1)
-	{
-		printf("%d\n", player);
 		return (0);
-	}
 	return (1);
-}
-
-
-// -*-------------------------------------
-
-
-typedef struct {
-	Point* data;
-	int front;
-	int rear;
-	int capacity;
-} Queue;
-
-
-void init_queue(Queue* q, int capacity) {
-	q->data = malloc(capacity * sizeof(Point));
-	q->front = 0;
-	q->rear = -1;
-	q->capacity = capacity;
-}
-
-void enqueue(Queue* q, Point p) {
-	if (q->rear == q->capacity - 1) {
-		// Handle queue full (shouldn't happen with proper capacity)
-		return;
-	}
-	q->data[++q->rear] = p;
-}
-
-Point dequeue(Queue* q) {
-	return q->data[q->front++];
-}
-
-int is_empty(Queue* q) {
-	return q->front > q->rear;
-}
-
-
-void flood_fill(char** map, int width, int height, int start_x, int start_y) {
-	Point directions[] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-	bool** visited = malloc(height * sizeof(bool*));
-	Queue q;
-
-	for (int i = 0; i < height; i++) {
-		visited[i] = calloc(width, sizeof(bool));
-	}
-	init_queue(&q, width * height);
-	enqueue(&q, (Point){start_x, start_y});
-	visited[start_y][start_x] = true;
-	while (!is_empty(&q)) {
-		Point current = dequeue(&q);
-		if (map[current.y][current.x] == ' ') {
-			map[current.y][current.x] = 's';
-		}
-		for (int i = 0; i < 4; i++) {
-			int nx = current.x + directions[i].x;
-			int ny = current.y + directions[i].y;
-
-			if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
-				char c = map[ny][nx];
-				if (!visited[ny][nx] && c != '1' && c != '0' && c != 'N' && c != 'W' && c != 'S' && c != 'E') {
-					visited[ny][nx] = true;
-					enqueue(&q, (Point){nx, ny});
-				}
-			}
-		}
-	}
 }
