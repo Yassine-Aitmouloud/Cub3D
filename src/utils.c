@@ -20,6 +20,7 @@ void	find_player_position(char **map)
 	int	i;
 	int	j;
 
+
 	i = 0;
 	j = 0;
 	while (map[i])
@@ -39,58 +40,57 @@ void	find_player_position(char **map)
 	}
 }
 
-void	draw(int wall_height,int x)
+void	draw(int x,int y,int color)
 {
-	int y;
-	int start;
-	int end;
-	start = (HEIGHT / 2) - (wall_height / 2);
-	end = (HEIGHT / 2) + (wall_height / 2);
-	y = start;
-	printf("->start = %d",start);
-	while(y < end && y < HEIGHT)
+	int x1 = 0;
+	int y1 = 0;
+	while(x1 != 10)
 	{
-		pixel_put(x, abs(y),0xFFFF00);
-		y++;
+		y1 = 0;
+		while(y1 != 100)
+		{
+			pixel_put(x + x1,y + y1,color);
+			y1++;
+			
+		}
+		x1++;
 	}
 }
 
-void	cast_rays(int col)
+void	prepare_data()
 {
-	g_game()->info.ray_x = g_game()->info.px;
-	g_game()->info.ray_y = g_game()->info.py;
-	g_game()->info.dx = cos(g_game()->info.ray_angle);
-	g_game()->info.dy = sin(g_game()->info.ray_angle);
-	while(1)
-	{
-		g_game()->info.ray_x += g_game()->info.dx;
-		g_game()->info.ray_y += g_game()->info.dy;
-		g_game()->x = (int)(g_game()->info.ray_x / TILE_SIZE);
-		g_game()->y = (int)(g_game()->info.ray_y / TILE_SIZE);
-		if (map[g_game()->y][g_game()->x] == '1')
-			break;
-	}
-	g_game()->info.dist = sqrt((g_game()->info.ray_x - g_game()->info.px)*(g_game()->info.ray_x - g_game()->info.px) + (g_game()->info.ray_y - g_game()->info.py)*(g_game()->info.ray_y - g_game()->info.py));
-	g_game()->info.dist = g_game()->info.dist * cos(g_game()->info.ray_angle - g_game()->info.angle);
-	int wall_height = (TILE_SIZE * g_game()->info.projection) / g_game()->info.dist;
-	draw(wall_height,col);
+	g_game()->info.angle = 270;
+	g_game()->info.px = 950.0;
+	g_game()->info.py = 540.0;
+	g_game()->info.pov = 60.0;
 }
 
 void	start_game()
 {
-	int col;
-	col = 0;
-	find_player_position(map);
-	g_game()->info.px = g_game()->info.px * TILE_SIZE + TILE_SIZE / 2;
-	g_game()->info.py = g_game()->info.py * TILE_SIZE + TILE_SIZE / 2;
-	g_game()->info.angle = 90 * M_PI / 180;
-	g_game()->info.pov = 60 * M_PI / 180;
-	g_game()->info.projection = (WIDTH / 2) / tan(g_game()->info.pov / 2);
-	while(col < WIDTH)
+	int i = 0;
+	int step = 0;
+	int j = 1;
+	// double rad;
+	prepare_data();
+	while(i < WIDTH)
 	{
-		g_game()->info.ray_angle = (g_game()->info.angle - (g_game()->info.pov / 2)) + (col * (g_game()->info.pov / WIDTH));
-		cast_rays(col);
-		// printf("->>> col = %d",col);
-		col++;
+		step = 0;
+		g_game()->info.ray_x = g_game()->info.px;
+		g_game()->info.ray_y = g_game()->info.py;
+		g_game()->info.ray_angle = (g_game()->info.angle - (g_game()->info.pov / 2) + (g_game()->info.pov * i / WIDTH));
+		g_game()->info.angle_rad = g_game()->info.ray_angle * (M_PI / 180);
+		g_game()->info.dx = cos(g_game()->info.angle_rad);
+		g_game()->info.dy = sin(g_game()->info.angle_rad);
+		while(step < 10000)
+		{
+			if (j == 255)
+				j = 1;
+			pixel_put(g_game()->info.ray_x,g_game()->info.ray_y,j);
+			g_game()->info.ray_x += g_game()->info.dx * 0.03; 
+			g_game()->info.ray_y += g_game()->info.dy * 0.03; 
+			step++;
+			j += 4;
+		}
+		i+= 95;
 	}
 }
