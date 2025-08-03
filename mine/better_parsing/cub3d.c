@@ -6,7 +6,7 @@
 /*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:07:29 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/30 17:04:49 by anas             ###   ########.fr       */
+/*   Updated: 2025/08/03 14:52:33 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void print_content()
 
 int main(int ac, char **av)
 {
+	void *mlx;
+	void *mlx_win;
 	if (ac != 2)
 	{
 		printf("[usage]: ./cub3D {file.cub}\n");
@@ -55,6 +57,13 @@ int main(int ac, char **av)
 		error("Error\nInvalid file name or content\n");
 	if (valid_map(av[1]) == 0 || valid_H_W_walls() == 0)
 		error("Error\nInvalid Map\n");
+	mlx = mlx_init();
+	if (!mlx)
+		return (0);
+	mlx_win = mlx_new_window(mlx, 2560, 1440, "Cub3D");
+	if (!mlx_win)
+		return (0);
+	mlx_loop(mlx);
 	print_content();
 	gc_collect();
 }

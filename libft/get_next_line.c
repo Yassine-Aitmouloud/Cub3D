@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenba <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/18 17:13:58 by abenba            #+#    #+#             */
-/*   Updated: 2024/12/18 17:51:50 by abenba           ###   ########.fr       */
+/*   Updated: 2025/08/03 14:53:11 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "libft.h"
@@ -41,7 +41,6 @@ char	*fill_buffer(int fd, char *left, char *buffer)
 char	*make_line(char *left, char **line)
 {
 	int		i;
-	char	*tmp;
 
 	i = 0;
 	while (left[i] != '\n' && left[i] != '\0')
@@ -57,7 +56,6 @@ char	*make_line(char *left, char **line)
 	else if (left)
 	{
 		*line = ft_substr(left, 0, i + 1);
-		tmp = left;
 		left = ft_substr(left, i + 1, ft_strlen(left) - i);
 	}
 	return (left);

@@ -6,7 +6,7 @@
 /*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/21 10:22:06 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/30 17:05:30 by anas             ###   ########.fr       */
+/*   Updated: 2025/08/03 14:50:44 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "libft/libft.h"
 # include <stdbool.h>
+# include "minilibx-linux/mlx.h"
+
 typedef struct t_GC
 {
     void *ptr;

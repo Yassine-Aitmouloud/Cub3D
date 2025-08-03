@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: abenba <abenba@student.42.fr>              +#+  +:+       +#+        */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 10:58:19 by abenba            #+#    #+#             */
-/*   Updated: 2025/07/22 09:27:14 by abenba           ###   ########.fr       */
+/*   Updated: 2025/08/03 14:52:54 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,10 +141,8 @@ char	**ft_make(char const *s, char *c, char **ptr, size_t len)
 char	**ft_split(char const *s, char *c)
 {
 	size_t	len;
-	size_t	i;
 	char	**ptr;
 
-	i = 0;
 	if (!s)
 		return (NULL);
 	len = ft_count_word(s, c);
