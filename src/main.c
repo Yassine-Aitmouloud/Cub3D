@@ -13,20 +13,14 @@
 // }
 #include "../includes/cub.h"
 
-char *mapp[] = {
-    "11111111111111111111111111",
-    "10111111110111111100010001",
-    "10111111110111111111010101",
-    "10111111110111111110000101",
-    "11111111110111111111111111",
-    "10111111110111111100000101",
-    "11111111110111111111111101",
-    "1011111111P111111100000001",
-    "11111111111111111111111101",
-    "11111111111111111111111111"
+char *map[] = {
+    "111111",
+    "100001",
+    "10P001",
+    "100001",
+    "111111",
+    NULL
 };
-
-char **map = mapp;
 
 t_cup	*g_game(void)
 {
@@ -34,10 +28,34 @@ t_cup	*g_game(void)
     
     	return (&infos);
 }
+
+void    ft_up()
+{
+    printf("up\n");
+    double rad = g_game()->info.angle * (M_PI / 180.0);
+    double move_speed = 5.0;
+    g_game()->info.px += cos(rad) * move_speed;
+    g_game()->info.py += sin(rad) * move_speed;
+    g_game()->img = mlx_new_image(g_game()->mlx,WIDTH,HEIGHT);
+    g_game()->addr = mlx_get_data_addr(g_game()->img,&g_game()->bits_per_pixel,
+            &g_game()->line_length,&g_game()->endian);
+    start_game();
+    mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->img, 0, 0);
+
+}
+
 int close2(int key)
 {
     if (key == ESC)
         exit(0);
+    if (key == 	KEY_UP)
+        ft_up();
+    // if (key == KEY_DOWN)
+    //     ft_down();
+    // if (key == KEY_LEFT)
+    //     ft_left();
+    // if (key == KEY_RIGHT)
+    //     ft_right();
     return 1;
 }
 int ft_close()

@@ -13,7 +13,7 @@
 # include "libft/libft.h"
 # include <fcntl.h>
 
-extern char **map;
+extern char *map[];
 enum		e_keycode
 {
 	ESC = 65307,
@@ -74,7 +74,7 @@ typedef struct s_cub
 	int x;
 	int y;
 } t_cup;
-void	cast_rays();
+void	cast_ray();
 
 // void	draw(int wall_height, int col);
 void	pixel_put(int x, int y, int color);
