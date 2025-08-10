@@ -33,32 +33,33 @@ enum Direction {
 
 typedef struct s_player
 {
+	int mapX;
+	int mapY;
+	double sideDistx;
+	double sideDisty;
     double	px;
     double	py;
     double	ray_x;
     double	ray_y;
-	double dx;
-	double dy;
+	double raydirx;
+	double raydiry;
 	double pov;
 	double angle;
 	double angle_rad;
 	double ray_angle;
-	double dist;
-	double projection;
+	double delta_x;
+	double delta_y;
+	double step_x;
+	double step_y;
+	int side;
+	int hit;
 	enum Direction vue;
 }   t_player;
 
-typedef struct s_sizes
-{
-    int	w_player;
-    int	h_player;
-	int wall;
-}   t_sizes;
 
 typedef struct s_cub
 {
 	t_player info;
-	t_sizes sizes;
     void *mlx;
     void *img;
 	char	*addr;
@@ -83,7 +84,7 @@ t_cup	*g_game(void);
 int	ft_close();
 int get_the_vue(char **map,int i, int j);
 void	find_player_position(char **map);
-void	start_game();
-
+void	cast_rays();
+void	prepare_data();
 
 #endif

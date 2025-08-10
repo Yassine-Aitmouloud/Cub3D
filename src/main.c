@@ -1,24 +1,14 @@
-// int width = WIDTH;
-// int height = HEIGHT;
-// while(width != 0)
-// {
-//     pixel_put(width, height, 0x0000FF);
-//     height = HEIGHT;
-//     while(height != 0)
-//     {
-//         pixel_put(width, height, 0x0000FF);
-//         height--;
-//     }    
-//     width--;
-// }
 #include "../includes/cub.h"
 
 char *map[] = {
-    "111111",
-    "100001",
-    "10P001",
-    "100001",
-    "111111",
+    "1111111",
+    "10101001",
+    "1000001",
+    "1000001",
+    "1000001",
+    "110P011",
+    "1000001",
+    "1111111",
     NULL
 };
 
@@ -29,33 +19,22 @@ t_cup	*g_game(void)
     	return (&infos);
 }
 
-void    ft_up()
-{
-    printf("up\n");
-    double rad = g_game()->info.angle * (M_PI / 180.0);
-    double move_speed = 5.0;
-    g_game()->info.px += cos(rad) * move_speed;
-    g_game()->info.py += sin(rad) * move_speed;
-    g_game()->img = mlx_new_image(g_game()->mlx,WIDTH,HEIGHT);
-    g_game()->addr = mlx_get_data_addr(g_game()->img,&g_game()->bits_per_pixel,
-            &g_game()->line_length,&g_game()->endian);
-    start_game();
-    mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->img, 0, 0);
 
-}
 
 int close2(int key)
 {
+    printf("key hit => %d\n",key);
     if (key == ESC)
         exit(0);
-    if (key == 	KEY_UP)
-        ft_up();
+    // if (key == 	KEY_UP)
+    //     g_game()->info.py += 0.1;
     // if (key == KEY_DOWN)
     //     ft_down();
     // if (key == KEY_LEFT)
     //     ft_left();
     // if (key == KEY_RIGHT)
     //     ft_right();
+    cast_rays();
     return 1;
 }
 int ft_close()
@@ -87,7 +66,8 @@ int main(int ac, char **av)
     (void)ac;
     (void)av;
     game_init();
-    start_game();
+    prepare_data();
+    cast_rays();
     mlx_hook(g_game()->win,CROSS,0,ft_close,NULL);
     mlx_key_hook(g_game()->win,close2,NULL);
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
