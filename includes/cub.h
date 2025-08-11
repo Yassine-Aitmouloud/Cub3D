@@ -17,11 +17,13 @@ extern char *map[];
 enum		e_keycode
 {
 	ESC = 65307,
-	KEY_DOWN = 65364,
-	KEY_LEFT = 65361,
-	KEY_RIGHT = 65363,
-	KEY_UP = 65362,
+	KEY_DOWN = 115,
+	KEY_LEFT = 97,
+	KEY_RIGHT = 100,
+	KEY_UP = 119,
 	CROSS = 17,
+	CAMERA_R = 65363,
+	CAMERA_L = 65361,
 };
 
 enum Direction {
@@ -56,10 +58,20 @@ typedef struct s_player
 	enum Direction vue;
 }   t_player;
 
+typedef struct s_keys
+{
+	int up;
+	int down;
+	int right;
+	int left;
+	int arrow_right;
+	int arrow_left;	
+} t_keys;
 
 typedef struct s_cub
 {
 	t_player info;
+	t_keys keys;
     void *mlx;
     void *img;
 	char	*addr;
@@ -75,7 +87,8 @@ typedef struct s_cub
 	int x;
 	int y;
 } t_cup;
-void	cast_ray();
+
+// void	cast_ray();
 
 // void	draw(int wall_height, int col);
 void	pixel_put(int x, int y, int color);

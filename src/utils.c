@@ -136,7 +136,12 @@ void	prepare_data()
 	g_game()->info.pov = 60.0;
 	g_game()->info.step_x = 1;
 	g_game()->info.step_y = 1;
-	
+	g_game()->keys.arrow_right = 0;
+	g_game()->keys.arrow_left = 0;	
+	g_game()->keys.up = 0;	
+	g_game()->keys.down = 0;
+	g_game()->keys.right = 0;
+	g_game()->keys.left = 0;
 }
 
 
