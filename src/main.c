@@ -1,14 +1,12 @@
 #include "../includes/cub.h"
 
 char *map[] = {
-    "1111111",
-    "10101001",
-    "1000001",
-    "1000001",
-    "1000001",
-    "110P011",
-    "1000001",
-    "1111111",
+    "11111111111",
+    "10010000001",
+    "10000010001",
+    "10100P00101",
+    "10001000001",
+    "11111111111",
     NULL
 };
 
@@ -18,24 +16,66 @@ t_cup	*g_game(void)
     
     	return (&infos);
 }
-
-void    ft_down()
+int	is_wall(double x, double y)
 {
-    double moveSpeed = 0.1;
-    double rad = g_game()->info.angle * M_PI / 180;
-    g_game()->info.px -= cos(rad) * moveSpeed;
-    g_game()->info.py -= sin(rad) * moveSpeed;
-    mlx_clear_window(g_game()->mlx,g_game()->win);
-    cast_rays();
-    mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+	int map_x = (int)x;
+	int map_y = (int)y;	
+    printf("Checking cell [%d][%d] -> %c\n", map_x, map_y, map[map_y][map_x]);
+	if (map_x < 0 || map_y < 0)
+		return (1);
+	if (!(map[map_y]) || !(map[map_y][map_x]))
+		return (1);	
+	if (map[map_y][map_x] == '1')
+		return (1);
+	return (0);
 }
 
 void    ft_up()
 {
-    double moveSpeed = 0.1;
+    double NEXTx = g_game()->info.px;
+    double NEXTy = g_game()->info.py;
+    double moveSpeed = 0.3;
     double rad = g_game()->info.angle * M_PI / 180;
-    g_game()->info.px += cos(rad) * moveSpeed;
-    g_game()->info.py += sin(rad) * moveSpeed;
+    NEXTx += cos(rad) * moveSpeed;
+    NEXTy += sin(rad) * moveSpeed;
+    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
+    printf("%d\n",is_wall(NEXTx,NEXTy));
+    // if (!is_wall(NEXTx,NEXTy))
+    // {
+    //     g_game()->info.px = NEXTx;
+    //     g_game()->info.py = NEXTy;
+    // } 
+    printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
+    if (!is_wall(NEXTx, g_game()->info.py))
+        g_game()->info.px = NEXTx;
+    if (!is_wall(g_game()->info.px, NEXTy))
+        g_game()->info.py = NEXTy;
+    mlx_clear_window(g_game()->mlx,g_game()->win);
+    cast_rays();
+    mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+}
+void    ft_down()
+{
+    double NEXTx = g_game()->info.px;
+    double NEXTy = g_game()->info.py;
+    double moveSpeed = 0.3;
+    double rad = g_game()->info.angle * M_PI / 180;
+    NEXTx -= cos(rad) * moveSpeed;
+    NEXTy -= sin(rad) * moveSpeed;
+    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
+    // printf("%d\n",is_wall(NEXTx,NEXTy));
+    // if (!is_wall(NEXTx,NEXTy))
+    // {
+    //     g_game()->info.px = NEXTx;
+    //     g_game()->info.py = NEXTy;
+    // } 
+    // printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
+    if (!is_wall(NEXTx, g_game()->info.py))
+        g_game()->info.px = NEXTx;
+    if (!is_wall(g_game()->info.px, NEXTy))
+        g_game()->info.py = NEXTy;
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
@@ -43,10 +83,25 @@ void    ft_up()
 
 void    ft_right()
 {
-    double moveSpeed = 0.1;
-    double rad = (g_game()->info.angle + 90)* M_PI / 180;
-    g_game()->info.px += cos(rad) * moveSpeed;
-    g_game()->info.py += sin(rad) * moveSpeed;
+    double NEXTx = g_game()->info.px;
+    double NEXTy = g_game()->info.py;
+    double moveSpeed = 0.3;
+    double rad = (g_game()->info.angle + 90) * M_PI / 180;
+    NEXTx += cos(rad) * moveSpeed;
+    NEXTy += sin(rad) * moveSpeed;
+    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
+    printf("%d\n",is_wall(NEXTx,NEXTy));
+    // if (!is_wall(NEXTx,NEXTy))
+    // {
+    //     g_game()->info.px = NEXTx;
+    //     g_game()->info.py = NEXTy;
+    // } 
+    // printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
+    if (!is_wall(NEXTx, g_game()->info.py))
+        g_game()->info.px = NEXTx;
+    if (!is_wall(g_game()->info.px, NEXTy))
+        g_game()->info.py = NEXTy;
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
@@ -54,14 +109,30 @@ void    ft_right()
 
 void    ft_left()
 {
-    double moveSpeed = 0.1;
-    double rad = (g_game()->info.angle + 90)* M_PI / 180;
-    g_game()->info.px -= cos(rad) * moveSpeed;
-    g_game()->info.py -= sin(rad) * moveSpeed;
+    double NEXTx = g_game()->info.px;
+    double NEXTy = g_game()->info.py;
+    double moveSpeed = 0.3;
+    double rad = (g_game()->info.angle + 90) * M_PI / 180;
+    NEXTx -= cos(rad) * moveSpeed;
+    NEXTy -= sin(rad) * moveSpeed;
+    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
+    // printf("%d\n",is_wall(NEXTx,NEXTy));
+    // if (!is_wall(NEXTx,NEXTy))
+    // {
+    //     g_game()->info.px = NEXTx;
+    //     g_game()->info.py = NEXTy;
+    // } 
+    // printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
+    if (!is_wall(NEXTx, g_game()->info.py))
+        g_game()->info.px = NEXTx;
+    if (!is_wall(g_game()->info.px, NEXTy))
+        g_game()->info.py = NEXTy;
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
 }
+
 
 int ft_close()
 {
@@ -134,14 +205,14 @@ int moves()
         ft_left();
     if (g_game()->keys.arrow_left)
     {
-        g_game()->info.angle -= 3;
+        g_game()->info.angle -= 5;
         mlx_clear_window(g_game()->mlx,g_game()->win);
         cast_rays();
         mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
     }
     if (g_game()->keys.arrow_right)
     {
-        g_game()->info.angle += 3;
+        g_game()->info.angle += 5;
         mlx_clear_window(g_game()->mlx,g_game()->win);
         cast_rays();
         mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);

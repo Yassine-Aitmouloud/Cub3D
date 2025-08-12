@@ -30,7 +30,7 @@ enum Direction {
     NORTH,
     EAST,
     SOUTH,
-    WEST
+    WEST 
 };
 
 typedef struct s_player

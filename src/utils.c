@@ -58,11 +58,16 @@ void	draw_wall(int i)
 	double drawEnd;
 	double lineHeight;
 	double perpDist;
+	double angle_diff;
+	double correctedDist;
 	if (g_game()->info.side == 0)
 		perpDist = (g_game()->info.mapX - g_game()->info.px + (1 - g_game()->info.step_x) / 2) / g_game()->info.raydirx;
 	else
 		perpDist = (g_game()->info.mapY - g_game()->info.py + (1 - g_game()->info.step_y) / 2) / g_game()->info.raydiry;
-	lineHeight = (HEIGHT / perpDist);
+	angle_diff = (g_game()->info.ray_angle - g_game()->info.angle) * (M_PI / 180);
+	correctedDist = perpDist * cos(angle_diff);
+	lineHeight = HEIGHT / correctedDist;
+
 	drawStart = -lineHeight / 2 + HEIGHT / 2;
 	drawEnd   =  lineHeight / 2 + HEIGHT / 2;
 	if (g_game()->info.side == 0)
@@ -108,7 +113,7 @@ void	cast_ray(int i)
 	side_step();
 	while(g_game()->info.hit != 1)
 	{
-		// printf("sideDistX => %f _ sideDistY => %f | deltax => %f deltay => %f\n",g_game()->info.sideDistx,g_game()->info.sideDisty,g_game()->info.delta_x,g_game()->info.delta_y);	
+		printf("sideDistX => %f _ sideDistY => %f | deltax => %f deltay => %f\n",g_game()->info.sideDistx,g_game()->info.sideDisty,g_game()->info.delta_x,g_game()->info.delta_y);	
 		if (g_game()->info.sideDistx < g_game()->info.sideDisty)
 		{
 			g_game()->info.sideDistx += g_game()->info.delta_x;
@@ -133,6 +138,8 @@ void	prepare_data()
 {
 	g_game()->info.angle = 270;
 	find_player_position(map);
+	// g_game()->info.px = 2.0;
+	// g_game()->info.py = 2.0;
 	g_game()->info.pov = 60.0;
 	g_game()->info.step_x = 1;
 	g_game()->info.step_y = 1;
@@ -142,7 +149,7 @@ void	prepare_data()
 	g_game()->keys.down = 0;
 	g_game()->keys.right = 0;
 	g_game()->keys.left = 0;
-}
+	}
 
 
 void	cast_rays()
@@ -156,8 +163,8 @@ void	cast_rays()
 		g_game()->info.angle_rad = g_game()->info.ray_angle * (M_PI / 180);
 		g_game()->info.raydirx = cos(g_game()->info.angle_rad);
 		g_game()->info.raydiry = sin(g_game()->info.angle_rad);
-		g_game()->info.delta_x = fabs(1 / g_game()->info.raydirx);
-		g_game()->info.delta_y = fabs(1 / g_game()->info.raydiry);
+		g_game()->info.delta_x = fabs(1.0 / g_game()->info.raydirx);
+		g_game()->info.delta_y = fabs(1.0 / g_game()->info.raydiry);
 		// printf("px => %f | py => %f | map_x => %d | map_y => %d | ray_angle => %f | angle_rad => %f | raydirx => %f | raydiry => %f \n",g_game()->info.px,g_game()->info.py,g_game()->info.mapX,g_game()->info.mapY,
 		// 	g_game()->info.ray_angle,g_game()->info.angle_rad,g_game()->info.raydirx,g_game()->info.raydiry);
 		cast_ray(i);
