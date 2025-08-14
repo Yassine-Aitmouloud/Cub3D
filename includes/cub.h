@@ -3,7 +3,7 @@
 
 # define WIDTH 1920
 # define HEIGHT 1080
-# define TILE_SIZE 64
+# define MINI_SIZE 8
 # define M_PI 3.141592653589793238462643383279502984
 # include <stdio.h>
 # include <unistd.h>
@@ -12,7 +12,7 @@
 # include "./minilibx-linux/mlx.h"
 # include "libft/libft.h"
 # include <fcntl.h>
-
+#include <pthread.h>
 extern char *map[];
 enum		e_keycode
 {

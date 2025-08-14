@@ -26,7 +26,7 @@ OBJ_libft = $(libftfiles:.c=.o)
 all: $(NAME)
 
 $(NAME) : $(OBJ_cub) $(OBJ_libft)
-	$(CC) $(OBJ_cub) $(OBJ_libft) -lm -lmlx -Lmlx -lXext -lX11 -o $(NAME)
+	$(CC) $(OBJ_cub) $(OBJ_libft) -lm -lmlx -Lincludes/minilibx-linux -lXext -lX11 -o $(NAME)
 
 
 clean:

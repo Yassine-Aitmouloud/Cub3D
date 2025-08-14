@@ -16,19 +16,29 @@ t_cup	*g_game(void)
     
     	return (&infos);
 }
-int	is_wall(double x, double y)
+int is_wall(double x, double y)
 {
-	int map_x = (int)x;
-	int map_y = (int)y;	
-    printf("Checking cell [%d][%d] -> %c\n", map_x, map_y, map[map_y][map_x]);
-	if (map_x < 0 || map_y < 0)
-		return (1);
-	if (!(map[map_y]) || !(map[map_y][map_x]))
-		return (1);	
-	if (map[map_y][map_x] == '1')
-		return (1);
-	return (0);
+    double radius = 0.3;
+    int map_x;
+    int map_y;
+    map_x = (int)(x + radius);
+    map_y = (int)(y - radius);
+    if (map_y < 0 || map_x < 0 || !map[map_y] || !map[map_y][map_x] || map[map_y][map_x] == '1')
+        return 1;
+
+    map_x = (int)(x - radius);
+    map_y = (int)(y + radius);
+    if (map_y < 0 || map_x < 0 || !map[map_y] || !map[map_y][map_x] || map[map_y][map_x] == '1')
+        return 1;
+
+    map_x = (int)(x + radius);
+    map_y = (int)(y + radius);
+    if (map_y < 0 || map_x < 0 || !map[map_y] || !map[map_y][map_x] || map[map_y][map_x] == '1')
+        return 1;
+
+    return 0;
 }
+
 
 void    ft_up()
 {
@@ -38,15 +48,12 @@ void    ft_up()
     double rad = g_game()->info.angle * M_PI / 180;
     NEXTx += cos(rad) * moveSpeed;
     NEXTy += sin(rad) * moveSpeed;
-    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    printf("%d\n",is_wall(NEXTx,NEXTy));
+    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
     // if (!is_wall(NEXTx,NEXTy))
     // {
     //     g_game()->info.px = NEXTx;
     //     g_game()->info.py = NEXTy;
     // } 
-    printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
-    g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
@@ -63,14 +70,14 @@ void    ft_down()
     double rad = g_game()->info.angle * M_PI / 180;
     NEXTx -= cos(rad) * moveSpeed;
     NEXTy -= sin(rad) * moveSpeed;
-    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    // printf("%d\n",is_wall(NEXTx,NEXTy));
+    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
+    // ("%d\n",is_wall(NEXTx,NEXTy));
     // if (!is_wall(NEXTx,NEXTy))
     // {
     //     g_game()->info.px = NEXTx;
     //     g_game()->info.py = NEXTy;
     // } 
-    // printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    // ("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
     // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
@@ -89,14 +96,13 @@ void    ft_right()
     double rad = (g_game()->info.angle + 90) * M_PI / 180;
     NEXTx += cos(rad) * moveSpeed;
     NEXTy += sin(rad) * moveSpeed;
-    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    printf("%d\n",is_wall(NEXTx,NEXTy));
+    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
     // if (!is_wall(NEXTx,NEXTy))
     // {
     //     g_game()->info.px = NEXTx;
     //     g_game()->info.py = NEXTy;
     // } 
-    // printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    // ("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
     // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
@@ -115,14 +121,14 @@ void    ft_left()
     double rad = (g_game()->info.angle + 90) * M_PI / 180;
     NEXTx -= cos(rad) * moveSpeed;
     NEXTy -= sin(rad) * moveSpeed;
-    // printf("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    // printf("%d\n",is_wall(NEXTx,NEXTy));
+    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
+    // ("%d\n",is_wall(NEXTx,NEXTy));
     // if (!is_wall(NEXTx,NEXTy))
     // {
     //     g_game()->info.px = NEXTx;
     //     g_game()->info.py = NEXTy;
     // } 
-    // printf("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
+    // ("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
     // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
@@ -224,6 +230,7 @@ int main(int ac, char **av)
 {
     (void)ac;
     (void)av;
+
     game_init();
     prepare_data();
     cast_rays();
