@@ -32,8 +32,8 @@ void	find_player_position(char **map)
 		{
 			if (map[i][j] == 'P')
 			{
-				g_game()->info.px = j;
-				g_game()->info.py = i;
+				g_game()->info.px = j + 0.5;
+				g_game()->info.py = i + 0.5;
 				return ;
 			}
 			j++;
@@ -61,21 +61,23 @@ void	draw_wall(int i)
 	double angle_diff;
 	double correctedDist;
 	if (g_game()->info.side == 0)
-		perpDist = (g_game()->info.mapX - g_game()->info.px + (1 - g_game()->info.step_x) / 2) / g_game()->info.raydirx;
+		perpDist = (g_game()->info.sideDistx - g_game()->info.delta_x);
 	else
-		perpDist = (g_game()->info.mapY - g_game()->info.py + (1 - g_game()->info.step_y) / 2) / g_game()->info.raydiry;
+		perpDist = (g_game()->info.sideDisty - g_game()->info.delta_y);
 	angle_diff = (g_game()->info.ray_angle - g_game()->info.angle) * (M_PI / 180);
 	correctedDist = perpDist * cos(angle_diff);
 	lineHeight = HEIGHT / correctedDist;
-
 	drawStart = -lineHeight / 2 + HEIGHT / 2;
 	drawEnd   =  lineHeight / 2 + HEIGHT / 2;
+	if (drawStart < 0) drawStart = 0;
+	if (drawEnd >= HEIGHT) drawEnd = HEIGHT - 1;
+
+	draw(i,drawEnd,HEIGHT,0x00FFF0);
+	draw(i, 0, drawStart,0x000FFF);
 	if (g_game()->info.side == 0)
-		draw(i,(int)drawStart,(int)drawEnd,0xFFFFFF);
+		draw(i,(int)drawStart,(int)drawEnd,0x81F18F);
 	else
-		draw(i,(int)drawStart,(int)drawEnd,0x808080);
-	draw(i,drawEnd,HEIGHT,0x00FF00);
-	draw(i, 0, drawStart,0x0000FF);
+		draw(i,(int)drawStart,(int)drawEnd,0x10F780);
 }
 
 
@@ -105,7 +107,6 @@ void	side_step()
 
 }
 
-
 void	cast_ray(int i)
 {
 	g_game()->info.hit = 0;
@@ -113,19 +114,33 @@ void	cast_ray(int i)
 	side_step();
 	while(g_game()->info.hit != 1)
 	{
+		// printf("map = | %c |\n",map[g_game()->info.mapY][g_game()->info.mapY]);
 		if (g_game()->info.sideDistx < g_game()->info.sideDisty)
 		{
-			g_game()->info.sideDistx += g_game()->info.delta_x;
-        	g_game()->info.mapX += g_game()->info.step_x;
-        	g_game()->info.side = 0;
+			g_game()->info.side = 0;
+			if (map[g_game()->info.mapY][g_game()->info.mapX] == '1')
+			g_game()->info.hit = 1;
+			else
+			{
+				g_game()->info.mapX += g_game()->info.step_x;
+				g_game()->info.sideDistx += g_game()->info.delta_x;
+			}
 		}
 		else
 		{
-			g_game()->info.sideDisty += g_game()->info.delta_y;
-			g_game()->info.mapY += g_game()->info.step_y;
-			// ("map y => %d\n",g_game()->info.mapY);
 			g_game()->info.side = 1;
-			// ("%d\n",g_game()->info.side);
+			if (map[g_game()->info.mapY][g_game()->info.mapX] == '1')
+				g_game()->info.hit = 1;
+			else
+			{
+				g_game()->info.mapY += g_game()->info.step_y;
+				g_game()->info.sideDisty += g_game()->info.delta_y;
+			}
+			// g_game()->info.sideDisty += g_game()->info.delta_y;
+			// g_game()->info.mapY += g_game()->info.step_y;
+			// // ("map y => %d\n",g_game()->info.mapY);
+			// g_game()->info.side = 1;
+			// // ("%d\n",g_game()->info.side);
 		}
 		if ((g_game()->info.mapY < 0  || g_game()->info.mapX < 0) || map[g_game()->info.mapY][g_game()->info.mapX] == '1')
 			g_game()->info.hit = 1;		

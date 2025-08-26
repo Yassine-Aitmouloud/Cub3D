@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "fcntl.h": "c",
-        "libft.h": "c",
-        "cub.h": "c",
-        "random": "c"
-    }
-}
