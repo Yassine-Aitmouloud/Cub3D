@@ -1,4 +1,4 @@
-#include "../includes/cub.h"
+#include "../cub.h"
 
 int get_the_vue(char **map,int i, int j)
 {

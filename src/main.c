@@ -1,4 +1,4 @@
-#include "../includes/cub.h"
+#include "../cub.h"
 
 char *map[81] = {
 "11111",

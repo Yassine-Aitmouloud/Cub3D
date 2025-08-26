@@ -10,7 +10,6 @@
 # include <stdlib.h>
 # include <math.h>
 # include "./minilibx-linux/mlx.h"
-# include "libft/libft.h"
 # include <fcntl.h>
 
 extern char *map[];
