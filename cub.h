@@ -82,6 +82,7 @@ typedef struct s_cub
 	void	*wall;
 	void	*sky;
 	void	*flor;
+	void	*gun;
 	char	**map;
 	int x;
 	int y;
@@ -98,5 +99,7 @@ int get_the_vue(char **map,int i, int j);
 void	find_player_position(char **map);
 void	cast_rays();
 void	prepare_data();
+void	load_gun_texture();
+void	draw_gun();
 
 #endif

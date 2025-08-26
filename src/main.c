@@ -6,7 +6,8 @@ char *map[81] = {
 "10001",
 "10P01",
 "10001",
-"11111"
+"11111",
+NULL
 
     // "                   1                                                   1",
     // "                  101                                                 101",
@@ -99,6 +100,7 @@ void    ft_up()
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    draw_gun();
 }
 void    ft_down()
 {
@@ -124,6 +126,7 @@ void    ft_down()
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    draw_gun();
 }
 
 void    ft_right()
@@ -149,6 +152,7 @@ void    ft_right()
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    draw_gun();
 }
 
 void    ft_left()
@@ -175,6 +179,7 @@ void    ft_left()
     mlx_clear_window(g_game()->mlx,g_game()->win);
     cast_rays();
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    draw_gun();
 }
 
 
@@ -186,10 +191,27 @@ int ft_close()
 void    game_init()
 {
     g_game()->mlx = mlx_init();
+    if (!g_game()->mlx)
+    {
+        printf("Failed to initialize MLX\n");
+        exit(1);
+    }
     g_game()->win = mlx_new_window(g_game()->mlx,WIDTH,HEIGHT,"GO GO GO");
+    if (!g_game()->win)
+    {
+        printf("Failed to create window\n");
+        exit(1);
+    }
     g_game()->img = mlx_new_image(g_game()->mlx,WIDTH,HEIGHT);
+    if (!g_game()->img)
+    {
+        printf("Failed to create image\n");
+        exit(1);
+    }
     g_game()->addr = mlx_get_data_addr(g_game()->img,&g_game()->bits_per_pixel,
     &g_game()->line_length,&g_game()->endian);
+    printf("Game initialized successfully\n");
+    load_gun_texture();
 }
 
 void	pixel_put(int x, int y, int color)
@@ -199,6 +221,31 @@ void	pixel_put(int x, int y, int color)
     return;
 	dst = g_game()->addr + (y * g_game()->line_length + x * (g_game()->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
+}
+
+void	load_gun_texture()
+{
+	int width, height;
+	
+	printf("Loading gun texture...\n");
+	g_game()->gun = mlx_xpm_file_to_image(g_game()->mlx, "textures/gun.xpm", &width, &height);
+	if (!g_game()->gun)
+	{
+		printf("Failed to load gun texture\n");
+		exit(1);
+	}
+	printf("Gun texture loaded successfully (%dx%d)\n", width, height);
+}
+
+void	draw_gun()
+{
+	int gun_width = 64;
+	int gun_height = 64;
+	int gun_x = WIDTH - gun_width - 50;  // Bottom-right corner with some margin
+	int gun_y = HEIGHT - gun_height - 50;
+	
+	if (g_game()->gun)
+		mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->gun, gun_x, gun_y);
 }
 
 int    key_pressed(int key)
@@ -253,6 +300,7 @@ int moves()
         mlx_clear_window(g_game()->mlx,g_game()->win);
         cast_rays();
         mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+        draw_gun();
     }
     if (g_game()->keys.arrow_right)
     {
@@ -260,6 +308,7 @@ int moves()
         mlx_clear_window(g_game()->mlx,g_game()->win);
         cast_rays();
         mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+        draw_gun();
     }
     return 0;
 }
@@ -277,6 +326,7 @@ int main(int ac, char **av)
     mlx_hook(g_game()->win,2,1L<<0,key_pressed,NULL);
     mlx_hook(g_game()->win,3,1L<<1,key_unpressed,NULL);
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    draw_gun();
     mlx_loop_hook(g_game()->mlx, moves,NULL);
     mlx_loop(g_game()->mlx);
     return (0);

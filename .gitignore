@@ -1,0 +1,14 @@
+# Build artifacts
+*.o
+Cub3d
+*.a
+.DS_Store
+
+# MinilibX specific
+minilibx-linux/libmlx.a
+minilibx-linux/libmlx_Linux.a
+minilibx-linux/obj/
+minilibx-linux/test/mlx-test
+minilibx-linux/test/*.o
+minilibx-linux/Makefile.gen
+minilibx-linux/test/Makefile.gen
