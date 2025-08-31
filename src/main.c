@@ -1,5 +1,4 @@
 #include "../includes/cub.h"
-
 char *map[81] = {
 "11111",
 "10101",
@@ -54,11 +53,18 @@ t_cup	*g_game(void)
     
     	return (&infos);
 }
+
 int is_wall(double x, double y)
 {
-    double radius = 0.3;
+    double radius = 0.3; 
     int map_x;
     int map_y;
+
+    map_x = (int)(x - radius);
+    map_y = (int)(y - radius);
+    if (map_y < 0 || map_x < 0 || !map[map_y] || !map[map_y][map_x] || map[map_y][map_x] == '1')
+        return 1;
+
     map_x = (int)(x + radius);
     map_y = (int)(y - radius);
     if (map_y < 0 || map_x < 0 || !map[map_y] || !map[map_y][map_x] || map[map_y][map_x] == '1')
@@ -74,7 +80,7 @@ int is_wall(double x, double y)
     if (map_y < 0 || map_x < 0 || !map[map_y] || !map[map_y][map_x] || map[map_y][map_x] == '1')
         return 1;
 
-    return 0;
+    return 0; 
 }
 
 
@@ -86,12 +92,6 @@ void    ft_up()
     double rad = g_game()->info.angle * M_PI / 180;
     NEXTx += cos(rad) * moveSpeed;
     NEXTy += sin(rad) * moveSpeed;
-    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    // if (!is_wall(NEXTx,NEXTy))
-    // {
-    //     g_game()->info.px = NEXTx;
-    //     g_game()->info.py = NEXTy;
-    // } 
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
@@ -108,15 +108,6 @@ void    ft_down()
     double rad = g_game()->info.angle * M_PI / 180;
     NEXTx -= cos(rad) * moveSpeed;
     NEXTy -= sin(rad) * moveSpeed;
-    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    // ("%d\n",is_wall(NEXTx,NEXTy));
-    // if (!is_wall(NEXTx,NEXTy))
-    // {
-    //     g_game()->info.px = NEXTx;
-    //     g_game()->info.py = NEXTy;
-    // } 
-    // ("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
-    // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
@@ -134,14 +125,6 @@ void    ft_right()
     double rad = (g_game()->info.angle + 90) * M_PI / 180;
     NEXTx += cos(rad) * moveSpeed;
     NEXTy += sin(rad) * moveSpeed;
-    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    // if (!is_wall(NEXTx,NEXTy))
-    // {
-    //     g_game()->info.px = NEXTx;
-    //     g_game()->info.py = NEXTy;
-    // } 
-    // ("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
-    // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
@@ -159,15 +142,6 @@ void    ft_left()
     double rad = (g_game()->info.angle + 90) * M_PI / 180;
     NEXTx -= cos(rad) * moveSpeed;
     NEXTy -= sin(rad) * moveSpeed;
-    // ("nexty => %f nextx => %f\n",NEXTy,NEXTy);
-    // ("%d\n",is_wall(NEXTx,NEXTy));
-    // if (!is_wall(NEXTx,NEXTy))
-    // {
-    //     g_game()->info.px = NEXTx;
-    //     g_game()->info.py = NEXTy;
-    // } 
-    // ("PX: %.2f  PY: %.2f  NX: %.2f  NY: %.2f\n",
-    // g_game()->info.px, g_game()->info.py, NEXTx, NEXTy);
     if (!is_wall(NEXTx, g_game()->info.py))
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))

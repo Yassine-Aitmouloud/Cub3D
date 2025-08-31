@@ -72,12 +72,12 @@ void	draw_wall(int i)
 	if (drawStart < 0) drawStart = 0;
 	if (drawEnd >= HEIGHT) drawEnd = HEIGHT - 1;
 
-	draw(i,drawEnd,HEIGHT,0x00FFF0);
-	draw(i, 0, drawStart,0x000FFF);
 	if (g_game()->info.side == 0)
-		draw(i,(int)drawStart,(int)drawEnd,0x81F18F);
+		draw(i,(int)drawStart,(int)drawEnd,0x124513);
 	else
-		draw(i,(int)drawStart,(int)drawEnd,0x10F780);
+		draw(i,(int)drawStart,(int)drawEnd,0x634642);
+	draw(i,drawEnd,HEIGHT,0x35d431);
+	draw(i, 0, drawStart,0x1f1d2f);
 }
 
 
