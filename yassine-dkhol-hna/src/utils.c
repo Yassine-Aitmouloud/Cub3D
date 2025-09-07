@@ -1,0 +1,257 @@
+#include "../cub.h"
+
+int get_the_vue(char **map,int i, int j)
+{
+    if (!map)
+        return (1);
+    if (map[i][j] == 'S')
+        return (g_game()->info.vue = SOUTH, 0);
+    if (map[i][j] == 'N')
+        return(g_game()->info.vue = NORTH, 0);
+    if (map[i][j] == 'W')
+        return (g_game()->info.vue = WEST, 0);
+    if (map[i][j] == 'E')
+        return (g_game()->info.vue = EAST, 0);
+    return (1);
+}
+
+void	find_player_position(char **map)
+{
+	int	i;
+	int	j;
+
+
+	i = 0;
+	j = 0;
+	// if (!map)
+	// 	return ;
+	while (map[i])
+	{
+		j = 0;
+		while (map[i][j])
+		{
+			if (map[i][j] == 'P')
+			{
+				g_game()->info.px = j + 0.5;
+				g_game()->info.py = i + 0.5;
+				return ;
+			}
+			j++;
+		}
+		i++;
+	}
+}
+
+void draw(int x,int start,int end,int color)
+{
+	while(start < end)
+	{
+		pixel_put(x,start,color);
+		start++;
+	}
+}
+void load_texture(t_texture *tex, char *path)
+{
+    int bpp;
+	int size_line;
+	int endian;
+
+    tex->img = mlx_xpm_file_to_image(g_game()->mlx, path, &tex->width, &tex->height);
+    if (!tex->img)
+	{
+        exit(33);
+	}
+    tex->pixels = (int *)mlx_get_data_addr(tex->img, &bpp, &size_line, &endian);
+}
+
+void	draw_wall(int i)
+{
+	double drawStart;
+	double drawEnd;
+	double lineHeight;
+	double perpDist;
+	double angle_diff;
+	double correctedDist;
+	if (g_game()->info.side == 0)
+		perpDist = (g_game()->info.sideDistx - g_game()->info.delta_x);
+	else
+		perpDist = (g_game()->info.sideDisty - g_game()->info.delta_y);
+	angle_diff = (g_game()->info.ray_angle - g_game()->info.angle) * (M_PI / 180);
+	correctedDist = perpDist * cos(angle_diff);
+	lineHeight = HEIGHT / correctedDist;
+	drawStart = -lineHeight / 2 + HEIGHT / 2;
+	drawEnd   =  lineHeight / 2 + HEIGHT / 2;
+	if (drawStart < 0) drawStart = 0;
+	if (drawEnd >= HEIGHT) drawEnd = HEIGHT - 1;
+    int texNum;
+    if (g_game()->info.side == 0)
+    {
+        if (g_game()->info.raydirx > 0)
+            texNum = 2;
+        else
+            texNum = 3;
+    }
+    else
+    {
+        if (g_game()->info.raydiry > 0)
+            texNum = 1;
+        else
+            texNum = 0;
+    }
+
+    t_texture *tex = &g_game()->textures[texNum];
+    double wallX;
+    if (g_game()->info.side == 0)
+        wallX = g_game()->info.py + correctedDist * g_game()->info.raydiry;
+    else
+        wallX = g_game()->info.px + correctedDist * g_game()->info.raydirx;
+    wallX -= floor(wallX);
+    int texX = (int)(wallX * tex->height);
+    if ((g_game()->info.side == 0 && g_game()->info.raydirx > 0) ||
+        (g_game()->info.side == 1 && g_game()->info.raydiry < 0))
+        texX = tex->width - texX - 1;
+    double step = 1.0 * tex->height / lineHeight;
+    double texPos = (drawStart - HEIGHT / 2 + lineHeight / 2) * step;
+	int y = drawStart;
+	int k = drawEnd;
+	int f = 0;
+	while (y < drawEnd)
+	{
+        int texY = (int)texPos;
+        if (texY < 0) texY = 0;
+        if (texY >= tex->height) texY = tex->height - 1;
+        texPos += step;
+
+        unsigned int color = tex->pixels[texY * tex->width + texX];
+        pixel_put(i, y, color);
+		y++;
+    }
+	while (k < HEIGHT)
+	{
+        pixel_put(i, k, 0x35d431);
+		k++;
+	}
+	while (f < drawStart)
+	{
+        pixel_put(i, f, 0x1f1d2f);
+		f++;	
+	}
+
+	// if (g_game()->info.side == 0)
+	// 	draw(i,(int)drawStart,(int)drawEnd,0x124513);
+	// else
+	// 	draw(i,(int)drawStart,(int)drawEnd,0x634642);
+	// draw(i,drawEnd,HEIGHT,0x35d431);
+	// draw(i, 0, drawStart,0x1f1d2f);
+}
+
+
+void	side_step()
+{
+	if (g_game()->info.raydirx < 0)
+	{
+		g_game()->info.step_x = -1;
+		g_game()->info.sideDistx = (g_game()->info.px - g_game()->info.mapX) * g_game()->info.delta_x;
+	}
+	else
+	{
+		g_game()->info.step_x = 1;
+		g_game()->info.sideDistx = (g_game()->info.mapX + 1.0 - g_game()->info.px) * g_game()->info.delta_x;
+	}
+
+	if (g_game()->info.raydiry < 0)
+	{
+		g_game()->info.step_y = -1;
+		g_game()->info.sideDisty = (g_game()->info.py - g_game()->info.mapY) * g_game()->info.delta_y;
+	}
+	else
+	{
+		g_game()->info.step_y = 1;
+		g_game()->info.sideDisty = (g_game()->info.mapY + 1.0 - g_game()->info.py) * g_game()->info.delta_y;
+	}
+
+}
+
+void	cast_ray(int i)
+{
+	g_game()->info.hit = 0;
+	g_game()->info.side = -1;
+	side_step();
+	while(g_game()->info.hit != 1)
+	{
+		// printf("map = | %c |\n",map[g_game()->info.mapY][g_game()->info.mapY]);
+		if (g_game()->info.sideDistx < g_game()->info.sideDisty)
+		{
+			g_game()->info.side = 0;
+			if (map[g_game()->info.mapY][g_game()->info.mapX] == '1')
+			g_game()->info.hit = 1;
+			else
+			{
+				g_game()->info.mapX += g_game()->info.step_x;
+				g_game()->info.sideDistx += g_game()->info.delta_x;
+			}
+		}
+		else
+		{
+			g_game()->info.side = 1;
+			if (map[g_game()->info.mapY][g_game()->info.mapX] == '1')
+				g_game()->info.hit = 1;
+			else
+			{
+				g_game()->info.mapY += g_game()->info.step_y;
+				g_game()->info.sideDisty += g_game()->info.delta_y;
+			}
+			// g_game()->info.sideDisty += g_game()->info.delta_y;
+			// g_game()->info.mapY += g_game()->info.step_y;
+			// // ("map y => %d\n",g_game()->info.mapY);
+			// g_game()->info.side = 1;
+			// // ("%d\n",g_game()->info.side);
+		}
+		if ((g_game()->info.mapY < 0  || g_game()->info.mapX < 0) || map[g_game()->info.mapY][g_game()->info.mapX] == '1')
+			g_game()->info.hit = 1;		
+	}
+	draw_wall(i);
+}
+
+void	prepare_data()
+{
+	load_texture(&g_game()->textures[0], "textures/n.xpm");
+	load_texture(&g_game()->textures[1], "textures/s.xpm");
+	load_texture(&g_game()->textures[2], "textures/e.xpm");
+	load_texture(&g_game()->textures[3], "textures/w.xpm");
+	g_game()->info.angle = 270;
+	find_player_position(map);
+	// g_game()->info.px = 2.0;
+	// g_game()->info.py = 2.0;
+	g_game()->info.pov = 60.0;
+	g_game()->info.step_x = 1;
+	g_game()->info.step_y = 1;
+	g_game()->keys.arrow_right = 0;
+	g_game()->keys.arrow_left = 0;	
+	g_game()->keys.up = 0;	
+	g_game()->keys.down = 0;
+	g_game()->keys.right = 0;
+	g_game()->keys.left = 0;
+}
+
+
+
+void	cast_rays()
+{
+	int i = 0;
+	while(i < WIDTH)
+	{
+		g_game()->info.mapX = (int)g_game()->info.px;
+		g_game()->info.mapY = (int)g_game()->info.py;
+		g_game()->info.ray_angle = (g_game()->info.angle - (g_game()->info.pov / 2) + (g_game()->info.pov * i / WIDTH));
+		g_game()->info.angle_rad = g_game()->info.ray_angle * (M_PI / 180);
+		g_game()->info.raydirx = cos(g_game()->info.angle_rad);
+		g_game()->info.raydiry = sin(g_game()->info.angle_rad);
+		g_game()->info.delta_x = fabs(1.0 / g_game()->info.raydirx);
+		g_game()->info.delta_y = fabs(1.0 / g_game()->info.raydiry);
+		// ("px => %f | py => %f | map_x => %d | map_y => %d | ray_angle => %f | angle_rad => %f | raydirx => %f | raydiry => %f \n",g_game()->info.px,g_game()->info.py,g_game()->info.mapX,g_game()->info.mapY,
+		// 	g_game()->info.ray_angle,g_game()->info.angle_rad,g_game()->info.raydirx,g_game()->info.raydiry);
+		cast_ray(i);
+		i++;
+	}
+}
