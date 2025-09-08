@@ -107,10 +107,10 @@ void	draw_wall(int i)
         wallX = g_game()->info.px + correctedDist * g_game()->info.raydirx;
     wallX -= floor(wallX);
     int texX = (int)(wallX * tex->height);
-    if ((g_game()->info.side == 0 && g_game()->info.raydirx > 0) ||
-        (g_game()->info.side == 1 && g_game()->info.raydiry < 0))
-        texX = tex->width - texX - 1;
-    double step = 1.0 * tex->height / lineHeight;
+    // if ((g_game()->info.side == 0 && g_game()->info.raydirx > 0) ||
+    //     (g_game()->info.side == 1 && g_game()->info.raydiry < 0))
+    //     texX = tex->width - texX - 1;
+    double step = tex->height / lineHeight;
     double texPos = (drawStart - HEIGHT / 2 + lineHeight / 2) * step;
 	int y = drawStart;
 	int k = drawEnd;
