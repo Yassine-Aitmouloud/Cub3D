@@ -1,41 +1,34 @@
-NAME = Cub3d
-CFLAGS = -g3 -Wall -Wextra -Werror -Werror 
 CC = cc
+CFLAGS = -Wall -Wextra -Werror -g3 
+SRC = src/main.c check_file_content.c gc.c validate_texturs.c add_colors.c validate_map.c check_file_name_content.c check_colors.c add_map_line.c check_closed_map.c change_spaces_in_map.c map_helper.c src/utils.c
 
-Cubfiles = src/main.c src/utils.c
+OBJ = $(SRC:.c=.o)
+NAME = cub3D
+LIBFT = libft/libft.a
+MLX = minilibx-linux/libmlx.a
 
-libftfiles =  libft/ft_atoi.c     libft/ft_isalpha.c  libft/ft_itoa.c  \
-			  	libft/ft_lstnew_bonus.c libft/ft_memcpy.c libft/ft_putendl_fd.c \
-			  	libft/ft_strchr.c libft/ft_strlcat.c libft/ft_strncmp.c  libft/ft_substr.c \
-				libft/ft_bzero.c libft/ft_isascii.c libft/ft_lstadd_back_bonus.c libft/ft_lstsize_bonus.c \
-				libft/ft_memmove.c libft/ft_putnbr_fd.c libft/ft_strdup.c libft/ft_strlcpy.c \
-				libft/ft_strnstr.c  libft/ft_tolower.c libft/ft_calloc.c libft/ft_isdigit.c \
-				libft/ft_lstadd_front_bonus.c  libft/ft_memchr.c libft/ft_memset.c libft/ft_putstr_fd.c \
-				libft/ft_striteri.c  libft/ft_strlen.c libft/ft_strrchr.c libft/ft_toupper.c \
-				libft/ft_isalnum.c  libft/ft_isprint.c libft/ft_lstlast_bonus.c libft/ft_memcmp.c \
-				libft/ft_putchar_fd.c  libft/ft_split.c libft/ft_strjoin.c libft/ft_strmapi.c \
-				libft/ft_strtrim.c \
 
-%.o: %.c
-	$(CC) $(CFLAGS)  -c $< -o $@
 
-OBJ_cub = $(Cubfiles:.c=.o)
+all: $(LIBFT) $(NAME) 
 
-OBJ_libft = $(libftfiles:.c=.o)
+$(LIBFT):
+	$(MAKE) -C libft
 
-all: $(NAME)
+$(MLX):
+	$(MAKE) -C minilibx-linux
 
-$(NAME) : $(OBJ_cub) $(OBJ_libft)
-	$(CC) $(OBJ_cub) $(OBJ_libft) -lm -lmlx -Lminilibx-linux -lXext -lX11 -o $(NAME)
-
+$(NAME): $(OBJ) $(LIBFT) $(MLX)
+	$(CC) $(OBJ) $(LIBFT) $(MLX) -lXext -lX11 -lm -lz -o $(NAME) 
 
 clean:
-	rm -f $(OBJ_cub) $(OBJ_libft) 
+	$(MAKE) -C libft clean
+	rm -rf $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	$(MAKE) -C libft fclean
+	rm -rf $(NAME)
 
-re: fclean all 
+re: fclean all
 
 .PHONY: all clean fclean re
-.SECONDARY: $(OBJ_cub) $(OBJ_libft)
+.SECONDARY: $(LIBFT) $(MLX) $(OBJ)
