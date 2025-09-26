@@ -1,18 +1,30 @@
-#include "../includes/cub.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/26 19:09:00 by aniki             #+#    #+#             */
+/*   Updated: 2025/09/26 20:40:17 by aniki            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-int get_the_vue(char **map,int i, int j)
+#include "../cub.h"
+
+int	get_the_vue(char **map, int i, int j)
 {
-    if (!map)
-        return (1);
-    if (map[i][j] == 'S')
-        return (g_game()->info.vue = SOUTH, 0);
-    if (map[i][j] == 'N')
-        return(g_game()->info.vue = NORTH, 0);
-    if (map[i][j] == 'W')
-        return (g_game()->info.vue = WEST, 0);
-    if (map[i][j] == 'E')
-        return (g_game()->info.vue = EAST, 0);
-    return (1);
+	if (!map)
+		return (1);
+	if (map[i][j] == 'S')
+		return (g_game()->info.angle = 90);
+	if (map[i][j] == 'N')
+		return (g_game()->info.angle = 270, 0);
+	if (map[i][j] == 'W')
+		return (g_game()->info.angle = 180, 0);
+	if (map[i][j] == 'E')
+		return (g_game()->info.angle = 0, 0);
+	return (1);
 }
 
 void	find_player_position(char **map)
@@ -20,18 +32,18 @@ void	find_player_position(char **map)
 	int	i;
 	int	j;
 
-
 	i = 0;
 	j = 0;
-	// if (!map)
-	// 	return ;
 	while (map[i])
 	{
 		j = 0;
 		while (map[i][j])
 		{
-			if (map[i][j] == 'P')
+			if (map[i][j] == 'N' ||
+						map[i][j] == 'W' || map[i][j] == 'S' ||
+						map[i][j] == 'E')
 			{
+				get_the_vue(map, i, j);
 				g_game()->info.px = j + 0.5;
 				g_game()->info.py = i + 0.5;
 				return ;
@@ -42,146 +54,63 @@ void	find_player_position(char **map)
 	}
 }
 
-void draw(int x,int start,int end,int color)
+void	calculate_line_height(double *line_height, double *draw_start,
+			double *draw_end)
 {
-	while(start < end)
-	{
-		pixel_put(x,start,color);
-		start++;
-	}
-}
+	double	perp_dist;
+	double	angle_diff;
+	double	corrected_dist;
 
+	if (g_game()->info.side == 0)
+		perp_dist = (g_game()->info.sideDistx - g_game()->info.delta_x);
+	else
+		perp_dist = (g_game()->info.sideDisty - g_game()->info.delta_y);
+	angle_diff = (g_game()->info.ray_angle - g_game()->info.angle)
+		* (M_PI / 180);
+	corrected_dist = perp_dist * cos(angle_diff);
+	*line_height = HEIGHT / corrected_dist;
+	*draw_start = -*line_height / 2 + HEIGHT / 2;
+	*draw_end = *line_height / 2 + HEIGHT / 2;
+	if (*draw_end >= HEIGHT)
+		*draw_end = HEIGHT - 1;
+}
 
 void	draw_wall(int i)
 {
-	double drawStart;
-	double drawEnd;
-	double lineHeight;
-	double perpDist;
-	double angle_diff;
-	double correctedDist;
-	if (g_game()->info.side == 0)
-		perpDist = (g_game()->info.sideDistx - g_game()->info.delta_x);
-	else
-		perpDist = (g_game()->info.sideDisty - g_game()->info.delta_y);
-	angle_diff = (g_game()->info.ray_angle - g_game()->info.angle) * (M_PI / 180);
-	correctedDist = perpDist * cos(angle_diff);
-	lineHeight = HEIGHT / correctedDist;
-	drawStart = -lineHeight / 2 + HEIGHT / 2;
-	drawEnd   =  lineHeight / 2 + HEIGHT / 2;
-	if (drawStart < 0) drawStart = 0;
-	if (drawEnd >= HEIGHT) drawEnd = HEIGHT - 1;
+	double				line_height;
+	double				draw_start;
+	double				draw_end;
+	t_texture_params	params;
 
 	if (g_game()->info.side == 0)
-		draw(i,(int)drawStart,(int)drawEnd,0x124513);
+		params.prep_dist = (g_game()->info.sideDistx - g_game()->info.delta_x);
 	else
-		draw(i,(int)drawStart,(int)drawEnd,0x634642);
-	draw(i,drawEnd,HEIGHT,0x35d431);
-	draw(i, 0, drawStart,0x1f1d2f);
+		params.prep_dist = (g_game()->info.sideDisty - g_game()->info.delta_y);
+	calculate_line_height(&line_height, &draw_start, &draw_end);
+	params.i = i;
+	params.line_height = line_height;
+	params.draw_start = draw_start;
+	params.draw_end = draw_end;
+	add_textures(&params);
 }
 
-
-void	side_step()
+void	cast_rays(void)
 {
-	if (g_game()->info.raydirx < 0)
-	{
-		g_game()->info.step_x = -1;
-		g_game()->info.sideDistx = (g_game()->info.px - g_game()->info.mapX) * g_game()->info.delta_x;
-	}
-	else
-	{
-		g_game()->info.step_x = 1;
-		g_game()->info.sideDistx = (g_game()->info.mapX + 1.0 - g_game()->info.px) * g_game()->info.delta_x;
-	}
+	double	angle;
+	int		i;
 
-	if (g_game()->info.raydiry < 0)
-	{
-		g_game()->info.step_y = -1;
-		g_game()->info.sideDisty = (g_game()->info.py - g_game()->info.mapY) * g_game()->info.delta_y;
-	}
-	else
-	{
-		g_game()->info.step_y = 1;
-		g_game()->info.sideDisty = (g_game()->info.mapY + 1.0 - g_game()->info.py) * g_game()->info.delta_y;
-	}
-
-}
-
-void	cast_ray(int i)
-{
-	g_game()->info.hit = 0;
-	g_game()->info.side = -1;
-	side_step();
-	while(g_game()->info.hit != 1)
-	{
-		// printf("map = | %c |\n",map[g_game()->info.mapY][g_game()->info.mapY]);
-		if (g_game()->info.sideDistx < g_game()->info.sideDisty)
-		{
-			g_game()->info.side = 0;
-			if (map[g_game()->info.mapY][g_game()->info.mapX] == '1')
-			g_game()->info.hit = 1;
-			else
-			{
-				g_game()->info.mapX += g_game()->info.step_x;
-				g_game()->info.sideDistx += g_game()->info.delta_x;
-			}
-		}
-		else
-		{
-			g_game()->info.side = 1;
-			if (map[g_game()->info.mapY][g_game()->info.mapX] == '1')
-				g_game()->info.hit = 1;
-			else
-			{
-				g_game()->info.mapY += g_game()->info.step_y;
-				g_game()->info.sideDisty += g_game()->info.delta_y;
-			}
-			// g_game()->info.sideDisty += g_game()->info.delta_y;
-			// g_game()->info.mapY += g_game()->info.step_y;
-			// // ("map y => %d\n",g_game()->info.mapY);
-			// g_game()->info.side = 1;
-			// // ("%d\n",g_game()->info.side);
-		}
-		if ((g_game()->info.mapY < 0  || g_game()->info.mapX < 0) || map[g_game()->info.mapY][g_game()->info.mapX] == '1')
-			g_game()->info.hit = 1;		
-	}
-	draw_wall(i);
-}
-
-void	prepare_data()
-{
-	g_game()->info.angle = 270;
-	find_player_position(map);
-	// g_game()->info.px = 2.0;
-	// g_game()->info.py = 2.0;
-	g_game()->info.pov = 60.0;
-	g_game()->info.step_x = 1;
-	g_game()->info.step_y = 1;
-	g_game()->keys.arrow_right = 0;
-	g_game()->keys.arrow_left = 0;	
-	g_game()->keys.up = 0;	
-	g_game()->keys.down = 0;
-	g_game()->keys.right = 0;
-	g_game()->keys.left = 0;
-}
-
-
-
-void	cast_rays()
-{
-	int i = 0;
-	while(i < WIDTH)
+	i = 0;
+	angle = g_game()->info.angle - (g_game()->info.pov / 2);
+	while (i < WIDTH)
 	{
 		g_game()->info.mapX = (int)g_game()->info.px;
 		g_game()->info.mapY = (int)g_game()->info.py;
-		g_game()->info.ray_angle = (g_game()->info.angle - (g_game()->info.pov / 2) + (g_game()->info.pov * i / WIDTH));
+		g_game()->info.ray_angle = (g_game()->info.pov * i / WIDTH);
 		g_game()->info.angle_rad = g_game()->info.ray_angle * (M_PI / 180);
 		g_game()->info.raydirx = cos(g_game()->info.angle_rad);
 		g_game()->info.raydiry = sin(g_game()->info.angle_rad);
 		g_game()->info.delta_x = fabs(1.0 / g_game()->info.raydirx);
 		g_game()->info.delta_y = fabs(1.0 / g_game()->info.raydiry);
-		// ("px => %f | py => %f | map_x => %d | map_y => %d | ray_angle => %f | angle_rad => %f | raydirx => %f | raydiry => %f \n",g_game()->info.px,g_game()->info.py,g_game()->info.mapX,g_game()->info.mapY,
-		// 	g_game()->info.ray_angle,g_game()->info.angle_rad,g_game()->info.raydirx,g_game()->info.raydiry);
 		cast_ray(i);
 		i++;
 	}
