@@ -1,3 +1,5 @@
+#include "../cub.h"
+
 void	get_map_size(int *height, int *width)
 {
 	*height = 0;

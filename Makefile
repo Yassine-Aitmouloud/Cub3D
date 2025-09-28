@@ -1,6 +1,8 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g3 
-SRC = src/moves.c  src/main.c check_file_content.c gc.c validate_texturs.c add_colors.c validate_map.c check_file_name_content.c check_colors.c add_map_line.c check_closed_map.c change_spaces_in_map.c map_helper.c src/utils.c
+SRC = src/moves.c  src/main.c check_file_content.c gc.c validate_texturs.c add_colors.c validate_map.c check_file_name_content.c\
+check_colors.c add_map_line.c check_closed_map.c change_spaces_in_map.c map_helper.c src/utils.c src/anas.c src/anas2.c src/dda.c\
+src/prepare_data.c src/textures.c
 
 OBJ = $(SRC:.c=.o)
 NAME = cub3D

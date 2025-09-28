@@ -126,7 +126,7 @@ typedef struct s_minimap
 	double	player_y;
 }	t_minimap;
 
-void	cast_ray(int i)
+void	cast_ray(int i);
 
 int	moves(void);
 void	ft_up(void);
@@ -237,5 +237,16 @@ int				init_queue(t_queue *q, int capacity);
 t_point			out_of_queue(t_queue *q);
 int				up(int i, int y);
 int				init_map(void);
+void			add_textures(t_texture_params *params);
+void			draw_square(int x, int y, int color);
+void			draw_gun_pixel(int screen_x, int screen_y);
+void			draw_minimap_cell(int map_x, int map_y, t_minimap *mini);
+void			get_map_size(int *height, int *width);
+void			side_step(void);
+void			draw_wall(int i);
+void			load_texture(t_texture *tex, char *path);
+void			load_gun_texture();
+void			calculate_wall_x(double prep_dist, t_texture *tex, int *tex_x);
+void			draw_floor_ceiling(t_texture_params *params);
 
 #endif

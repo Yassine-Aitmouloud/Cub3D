@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 19:09:00 by aniki             #+#    #+#             */
-/*   Updated: 2025/09/26 20:40:17 by aniki            ###   ########.fr       */
+/*   Updated: 2025/09/28 21:59:35 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,11 +96,11 @@ void	draw_wall(int i)
 
 void	cast_rays(void)
 {
-	double	angle;
+	// double	angle;
 	int		i;
 
 	i = 0;
-	angle = g_game()->info.angle - (g_game()->info.pov / 2);
+	// angle = g_game()->info.angle - (g_game()->info.pov / 2);
 	while (i < WIDTH)
 	{
 		g_game()->info.mapX = (int)g_game()->info.px;
