@@ -126,7 +126,8 @@ typedef struct s_minimap
 	double	player_y;
 }	t_minimap;
 
-// void	cast_ray();
+void	cast_ray(int i)
+
 int	moves(void);
 void	ft_up(void);
 void	ft_down(void);

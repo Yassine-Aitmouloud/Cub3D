@@ -6,7 +6,7 @@
 /*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:53:30 by aniki             #+#    #+#             */
-/*   Updated: 2025/09/26 21:21:52 by aniki            ###   ########.fr       */
+/*   Updated: 2025/09/28 20:17:12 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,41 @@ int	key_unpressed(int key)
 	return (0);
 }
 
+int mouse_move(int x, int y)
+{
+    static int last_x = -1;
+
+    if (last_x == -1) // first time
+        last_x = x;
+
+    int delta_x = x - last_x;
+    last_x = x;
+
+    if (delta_x == 0)
+        return (0);
+
+    double rot_speed = 0.03;
+
+    if (delta_x > 0)
+	{
+		g_game()->info.angle += 3;
+		mlx_clear_window(g_game()->mlx, g_game()->win);
+		cast_rays();
+		mlx_put_image_to_window(g_game()->mlx, g_game()->win,
+			g_game()->img, 0, 0);
+	}
+    else if (delta_x < 0)
+	{
+		g_game()->info.angle -= 3;
+		mlx_clear_window(g_game()->mlx, g_game()->win);
+		cast_rays();
+		mlx_put_image_to_window(g_game()->mlx,
+			g_game()->win, g_game()->img, 0, 0);
+	}
+    return (0);
+}
+
+
 int	main(int ac, char **av)
 {
 	if (ac != 2)
@@ -107,6 +142,7 @@ int	main(int ac, char **av)
 	mlx_hook (g_game()->win, 2, 1L << 0, key_pressed, NULL);
 	mlx_hook (g_game()->win, 3, 1L << 1, key_unpressed, NULL);
 	mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->img, 0, 0);
+	mlx_hook(g_game()->win, 6, 1L<<6, mouse_move, NULL);
 	mlx_loop_hook(g_game()->mlx, moves, NULL);
 	mlx_loop(g_game()->mlx);
 	gc_collect();
