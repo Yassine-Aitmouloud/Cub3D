@@ -1,4 +1,4 @@
-#include "../cub.h"
+# include "../cub.h"
 
 void load_texture(t_texture *tex, char *path)
 {
@@ -61,33 +61,33 @@ void	draw_wall_texture(t_texture_params *params, t_texture *tex, int tex_x)
 	}
 }
 
-void	add_textures(t_texture_params *params)
+void	draw_floor_ceiling(t_texture_params *params)
 {
-	int			tex_num;
-	t_texture	*tex;
-	int			tex_x;
+	double	k;
+	double	f;
 
-	determine_texture(&tex_num);
-	tex = &g_game()->textures[tex_num];
-	calculate_wall_x(params->prep_dist, tex, &tex_x);
-	draw_wall_texture(params, tex, tex_x);
-	draw_floor_ceiling(params);
+	k = params->draw_end;
+	f = 0.0;
+	while (k < HEIGHT)
+	{
+		pixel_put(params->i, k, content()->floor_color);
+		k++;
+	}
+	while (f < params->draw_start)
+	{
+		pixel_put(params->i, f, content()->ceiling_color);
+		f++;
+	}
 }
 
-void load_gun_texture()
+void	calculate_wall_x(double prep_dist, t_texture *tex, int *tex_x)
 {
-    int bpp;
-    int size_line;
-    int endian;
+	double	wall_x;
 
-    g_game()->gun_img = mlx_xpm_file_to_image(g_game()->mlx, "textures/tile000.xpm", 
-                                             &g_game()->gun_width, &g_game()->gun_height);
-    if (!g_game()->gun_img)
-		error("Error\nCould not load gun texture\n");
-    g_game()->gun_pixels = (int *)mlx_get_data_addr(g_game()->gun_img, &bpp, &size_line, &endian);
-    g_game()->gun_scale = 2.0;
-    int scaled_width = g_game()->gun_width * g_game()->gun_scale;
-    int scaled_height = g_game()->gun_height * g_game()->gun_scale;
-    g_game()->gun_x = (WIDTH - scaled_width) / 2;
-    g_game()->gun_y = HEIGHT - scaled_height;
+	if (g_game()->info.side == 0)
+		wall_x = g_game()->info.py + prep_dist * g_game()->info.raydiry;
+	else
+		wall_x = g_game()->info.px + prep_dist * g_game()->info.raydirx;
+	wall_x -= floor(wall_x);
+	*tex_x = (int)(wall_x * tex->width);
 }
