@@ -1,16 +1,16 @@
 #ifndef CUB_H
 #define CUB_H
 
-# define WIDTH 1920
+# define WIDTH 3840
 #define MINIMAP_SCALE 16
-# define HEIGHT 1080
+# define HEIGHT 2160
 # define TILE_SIZE 64
 # define M_PI 3.141592653589793238462643383279502984
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <math.h>
-# include "./minilibx-linux/mlx.h"
+# include "mlx.h"
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <X11/keysym.h>

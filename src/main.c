@@ -261,6 +261,38 @@ int moves()
     return 0;
 }
 
+
+int mouse_move(int x)
+{
+    static int last_x = -1;
+
+    if (last_x == -1)
+        last_x = x;
+
+    int delta_x = x - last_x;
+    last_x = x;
+
+    if (delta_x == 0)
+        return (0);
+    if (delta_x > 0)
+	{
+		g_game()->info.angle += 1;
+		mlx_clear_window(g_game()->mlx, g_game()->win);
+		cast_rays();
+		mlx_put_image_to_window(g_game()->mlx, g_game()->win,
+			g_game()->img, 0, 0);
+	}
+    else if (delta_x < 0)
+	{
+		g_game()->info.angle -= 1;
+		mlx_clear_window(g_game()->mlx, g_game()->win);
+		cast_rays();
+		mlx_put_image_to_window(g_game()->mlx,
+			g_game()->win, g_game()->img, 0, 0);
+	}
+    return (0);
+}
+
 int main(int ac, char **av)
 {
     if (ac != 2)
@@ -279,6 +311,7 @@ int main(int ac, char **av)
     moves();
     mlx_hook(g_game()->win,CROSS,0,ft_close,NULL);
         // mlx_key_hook(g_game()->win,close2,NULL);
+    mlx_hook(g_game()->win, 6, 1L<<6, mouse_move, NULL);
     mlx_hook(g_game()->win,2,1L<<0,key_pressed,NULL);
     mlx_hook(g_game()->win,3,1L<<1,key_unpressed,NULL);
     mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
