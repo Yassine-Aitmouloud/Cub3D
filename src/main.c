@@ -117,9 +117,7 @@ void    ft_up()
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
         g_game()->info.py = NEXTy;
-    mlx_clear_window(g_game()->mlx,g_game()->win);
-    cast_rays();
-    mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    g_game()->keys.needs_redraw = 1;
 }
 void    ft_down()
 {
@@ -133,9 +131,7 @@ void    ft_down()
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
         g_game()->info.py = NEXTy;
-    mlx_clear_window(g_game()->mlx,g_game()->win);
-    cast_rays();
-    mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    g_game()->keys.needs_redraw = 1;
 }
 
 void    ft_right()
@@ -150,9 +146,7 @@ void    ft_right()
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
         g_game()->info.py = NEXTy;
-    mlx_clear_window(g_game()->mlx,g_game()->win);
-    cast_rays();
-    mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    g_game()->keys.needs_redraw = 1;
 }
 
 void    ft_left()
@@ -167,9 +161,7 @@ void    ft_left()
         g_game()->info.px = NEXTx;
     if (!is_wall(g_game()->info.px, NEXTy))
         g_game()->info.py = NEXTy;
-    mlx_clear_window(g_game()->mlx,g_game()->win);
-    cast_rays();
-    mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+    g_game()->keys.needs_redraw = 1;
 }
 
 
@@ -184,7 +176,14 @@ void    game_init()
     g_game()->win = mlx_new_window(g_game()->mlx,WIDTH,HEIGHT,"GO GO GO");
     g_game()->img = mlx_new_image(g_game()->mlx,WIDTH,HEIGHT);
     g_game()->addr = mlx_get_data_addr(g_game()->img,&g_game()->bits_per_pixel,
-    &g_game()->line_length,&g_game()->endian);
+    &g_game()->line_length,&g_game()->endian);    
+    g_game()->keys.up = 0;
+    g_game()->keys.down = 0;
+    g_game()->keys.left = 0;
+    g_game()->keys.right = 0;
+    g_game()->keys.arrow_left = 0;
+    g_game()->keys.arrow_right = 0;
+    g_game()->keys.mouse_moved = 0;
 }
 
 void	pixel_put(int x, int y, int color)
@@ -217,6 +216,8 @@ int    key_pressed(int key)
 
 int    key_unpressed(int key)
 {
+    if (key == ESC)
+        exit(0);
     if (key == KEY_UP)
         g_game()->keys.up = 0;
     if (key == KEY_DOWN)
@@ -245,13 +246,17 @@ int moves()
     if (g_game()->keys.arrow_left)
     {
         g_game()->info.angle -= 3;
-        mlx_clear_window(g_game()->mlx,g_game()->win);
-        cast_rays();
-        mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
+        g_game()->keys.needs_redraw = 1;
     }
     if (g_game()->keys.arrow_right)
     {
         g_game()->info.angle += 3;
+        g_game()->keys.needs_redraw = 1;
+    }
+    if (g_game()->keys.mouse_moved)
+        g_game()->keys.mouse_moved = 0;    
+    if (g_game()->keys.needs_redraw)
+    {
         mlx_clear_window(g_game()->mlx,g_game()->win);
         cast_rays();
         mlx_put_image_to_window(g_game()->mlx,g_game()->win,g_game()->img,0,0);
@@ -261,37 +266,30 @@ int moves()
     return 0;
 }
 
-
 int mouse_move(int x)
 {
     static int last_x = -1;
-
+    
+    mlx_mouse_hide(g_game()->mlx, g_game()->win);
     if (last_x == -1)
         last_x = x;
 
     int delta_x = x - last_x;
     last_x = x;
-
-    if (delta_x == 0)
+ 
+    if (abs(delta_x) < 2)
         return (0);
-    if (delta_x > 0)
-	{
-		g_game()->info.angle += 1;
-		mlx_clear_window(g_game()->mlx, g_game()->win);
-		cast_rays();
-		mlx_put_image_to_window(g_game()->mlx, g_game()->win,
-			g_game()->img, 0, 0);
-	}
-    else if (delta_x < 0)
-	{
-		g_game()->info.angle -= 1;
-		mlx_clear_window(g_game()->mlx, g_game()->win);
-		cast_rays();
-		mlx_put_image_to_window(g_game()->mlx,
-			g_game()->win, g_game()->img, 0, 0);
-	}
+    double sensitivity = 0.3;
+    if (abs(delta_x) > 10)
+        sensitivity = 0.6;
+    
+    g_game()->info.angle += (delta_x * sensitivity);
+    
+    g_game()->keys.mouse_moved = 1;
+    g_game()->keys.needs_redraw = 1;
     return (0);
 }
+
 
 int main(int ac, char **av)
 {
@@ -303,14 +301,12 @@ int main(int ac, char **av)
 	if (check_file(av[1]) == 0)
 		error("Error\nInvalid file name or content\n");
 	if (valid_map(av[1]) == 0 || valid_h_w_walls() == 0)
-		error("Error\nInvalid Map\n");
-    
+		error("Error\nInvalid Map\n");    
     game_init();
     prepare_data();
     cast_rays();
     moves();
     mlx_hook(g_game()->win,CROSS,0,ft_close,NULL);
-        // mlx_key_hook(g_game()->win,close2,NULL);
     mlx_hook(g_game()->win, 6, 1L<<6, mouse_move, NULL);
     mlx_hook(g_game()->win,2,1L<<0,key_pressed,NULL);
     mlx_hook(g_game()->win,3,1L<<1,key_unpressed,NULL);
@@ -320,3 +316,4 @@ int main(int ac, char **av)
     gc_collect();
     return (0);
 }
+

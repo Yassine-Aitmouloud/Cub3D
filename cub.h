@@ -1,16 +1,17 @@
 #ifndef CUB_H
 #define CUB_H
 
-# define WIDTH 3840
+# define WIDTH 1920
 #define MINIMAP_SCALE 16
-# define HEIGHT 2160
+# define HEIGHT 1080
 # define TILE_SIZE 64
 # define M_PI 3.141592653589793238462643383279502984
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <math.h>
-# include "mlx.h"
+# include <time.h>
+# include "./minilibx-linux/mlx.h"
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <X11/keysym.h>
@@ -75,7 +76,9 @@ typedef struct s_keys
 	int right;
 	int left;
 	int arrow_right;
-	int arrow_left;	
+	int arrow_left;
+	int mouse_moved;
+	int needs_redraw;
 } t_keys;
 
 typedef struct s_cub
