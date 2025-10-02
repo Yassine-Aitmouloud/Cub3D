@@ -1,4 +1,4 @@
-# include "../cub.h"
+#include "../cub.h"
 
 void	add_textures(t_texture_params *params)
 {
@@ -30,17 +30,15 @@ void	calculate_line_height(double *line_height, double *draw_start,
 	*line_height = HEIGHT / corrected_dist;
 	*draw_start = -*line_height / 2 + HEIGHT / 2;
 	*draw_end = *line_height / 2 + HEIGHT / 2;
-	// if (*draw_start < 0)
-	// 	*draw_start = 0;
 	if (*draw_end >= HEIGHT)
 		*draw_end = HEIGHT - 1;
 }
 
 void	draw_wall(int i)
 {
-	double			line_height;
-	double			draw_start;
-	double			draw_end;
+	double				line_height;
+	double				draw_start;
+	double				draw_end;
 	t_texture_params	params;
 
 	if (g_game()->info.side == 0)
