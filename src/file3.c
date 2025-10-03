@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file3.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 15:29:04 by anas              #+#    #+#             */
+/*   Updated: 2025/10/03 15:37:52 by anas             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub.h"
 
 void	add_textures(t_texture_params *params)
@@ -21,9 +33,9 @@ void	calculate_line_height(double *line_height, double *draw_start,
 	double	corrected_dist;
 
 	if (g_game()->info.side == 0)
-		perp_dist = (g_game()->info.sideDistx - g_game()->info.delta_x);
+		perp_dist = (g_game()->info.side_distx - g_game()->info.delta_x);
 	else
-		perp_dist = (g_game()->info.sideDisty - g_game()->info.delta_y);
+		perp_dist = (g_game()->info.side_disty - g_game()->info.delta_y);
 	angle_diff = (g_game()->info.ray_angle - g_game()->info.angle)
 		* (M_PI / 180);
 	corrected_dist = perp_dist * cos(angle_diff);
@@ -42,9 +54,9 @@ void	draw_wall(int i)
 	t_texture_params	params;
 
 	if (g_game()->info.side == 0)
-		params.prep_dist = (g_game()->info.sideDistx - g_game()->info.delta_x);
+		params.prep_dist = (g_game()->info.side_distx - g_game()->info.delta_x);
 	else
-		params.prep_dist = (g_game()->info.sideDisty - g_game()->info.delta_y);
+		params.prep_dist = (g_game()->info.side_disty - g_game()->info.delta_y);
 	calculate_line_height(&line_height, &draw_start, &draw_end);
 	params.i = i;
 	params.line_height = line_height;
@@ -69,7 +81,8 @@ void	draw_gun_pixel(int screen_x, int screen_y)
 		{
 			coords[0] = g_game()->gun_x + screen_x;
 			coords[1] = g_game()->gun_y + screen_y;
-			if (coords[0] >= 0 && coords[0] < WIDTH && coords[1] >= 0 && coords[1] < HEIGHT)
+			if (coords[0] >= 0 && coords[0] < WIDTH
+				&& coords[1] >= 0 && coords[1] < HEIGHT)
 			{
 				pixel_put(coords[0], coords[1], color);
 			}

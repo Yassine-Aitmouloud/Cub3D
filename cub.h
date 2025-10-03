@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub.h                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 15:04:17 by anas              #+#    #+#             */
+/*   Updated: 2025/10/03 15:26:45 by anas             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB_H
-#define CUB_H
+# define CUB_H
 
 # define WIDTH 1920
-#define MINIMAP_SCALE 16
+# define MINIMAP_SCALE 16
 # define HEIGHT 1080
 # define TILE_SIZE 64
 # define M_PI 3.141592653589793238462643383279502984
@@ -17,7 +29,6 @@
 # include <X11/keysym.h>
 # include <stdbool.h>
 
-extern char *map[];
 enum		e_keycode
 {
 	ESC = 65307,
@@ -30,84 +41,86 @@ enum		e_keycode
 	CAMERA_L = 65361,
 };
 
-enum Direction {
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST 
+enum e_Direction
+{
+	NORTH,
+	EAST,
+	SOUTH,
+	WEST
 };
 
-typedef struct s_texture {
-    void    *img;
-    int     *pixels;
-    int     width;
-    int     height;
-}   t_texture;
+typedef struct s_texture
+{
+	void	*img;
+	int		*pixels;
+	int		width;
+	int		height;
+}	t_texture;
 
 typedef struct s_player
 {
-	int mapX;
-	int mapY;
-	double sideDistx;
-	double sideDisty;
-    double	px;
-    double	py;
-    double	ray_x;
-    double	ray_y;
-	double raydirx;
-	double raydiry;
-	double pov;
-	double angle;
-	double angle_rad;
-	double ray_angle;
-	double delta_x;
-	double delta_y;
-	double step_x;
-	double step_y;
-	int side;
-	int hit;
-	enum Direction vue;
-}   t_player;
+	int					map_x;
+	int					map_y;
+	double				side_distx;
+	double				side_disty;
+	double				px;
+	double				py;
+	double				ray_x;
+	double				ray_y;
+	double				raydirx;
+	double				raydiry;
+	double				pov;
+	double				angle;
+	double				angle_rad;
+	double				ray_angle;
+	double				delta_x;
+	double				delta_y;
+	double				step_x;
+	double				step_y;
+	int					side;
+	int					hit;
+	enum e_Direction	vue;
+}	t_player;
 
 typedef struct s_keys
 {
-	int up;
-	int down;
-	int right;
-	int left;
-	int arrow_right;
-	int arrow_left;
-	int mouse_moved;
-	int needs_redraw;
-} t_keys;
+	int	up;
+	int	down;
+	int	right;
+	int	left;
+	int	arrow_right;
+	int	arrow_left;
+	int	mouse_moved;
+	int	needs_redraw;
+}	t_keys;
 
 typedef struct s_cub
 {
-	t_player info;
-	t_keys keys;
-    void *mlx;
-    void *img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-    void *win;
-	void	*player;
-	void	*wall;
-	void	*sky;
-	void	*flor;
-	char	**map;
-	int x;
-	int y;
-	t_texture   textures[4];
-	void *gun_img;
-    int *gun_pixels;
-    int gun_width;
-    int gun_height;
-    int gun_x;
-    int gun_y;
-	float gun_scale;
-} t_cup;
+	t_player	info;
+	t_keys		keys;
+	void		*mlx;
+	void		*img;
+	char		*addr;
+	int			bits_per_pixel;
+	int			line_length;
+	int			endian;
+	void		*win;
+	void		*player;
+	void		*wall;
+	void		*sky;
+	void		*flor;
+	char		**map;
+	int			x;
+	int			y;
+	t_texture	textures[4];
+	void		*gun_img;
+	int			*gun_pixels;
+	int			gun_width;
+	int			gun_height;
+	int			gun_x;
+	int			gun_y;
+	float		gun_scale;
+}	t_cup;
 
 typedef struct s_texture_params
 {
@@ -128,30 +141,6 @@ typedef struct s_minimap
 	double	player_x;
 	double	player_y;
 }	t_minimap;
-
-// void	cast_ray();
-
-// void	draw(int wall_height, int col);
-int redraw(void);
-int	is_wall(double x, double y);
-void	ft_up(void);
-void	ft_right(void);
-void	ft_down(void);
-void	ft_left(void);
-int	moves(void);
-void	pixel_put(int x, int y, int color);
-void    game_init();
-t_cup	*g_game(void);
-int	ft_close();
-int get_the_vue(char **map,int i, int j);
-void	find_player_position(char **map);
-void	cast_rays();
-void	prepare_data();
-void draw_minimap();
-void draw_gun();
-
-
-// for pars
 
 typedef struct t_GC
 {
@@ -244,14 +233,31 @@ int				init_map(void);
 void			draw_minimap_cell(int map_x, int map_y, t_minimap *mini);
 void			get_map_size(int *height, int *width);
 void			draw_square(int x, int y, int color);
-void			side_step();
-void	draw_wall(int i);
-void load_texture(t_texture *tex, char *path);
-void load_gun_texture();
-void	draw_gun_column(int screen_y, int scaled_width);
-void	calculate_wall_x(double prep_dist, t_texture *tex, int *tex_x);
-void	draw_floor_ceiling(t_texture_params *params);
-void	draw_wall_texture(t_texture_params *params, t_texture *tex, int tex_x);
-void	determine_texture(int *tex_num);
+void			side_step(void);
+void			draw_wall(int i);
+void			load_texture(t_texture *tex, char *path);
+void			load_gun_texture(void);
+void			draw_gun_column(int screen_y, int scaled_width);
+void			calculate_wall_x(double prep_dist, t_texture *tex, int *tex_x);
+void			draw_floor_ceiling(t_texture_params *params);
+void			draw_wall_texture(t_texture_params *p, t_texture *tt, int t);
+void			determine_texture(int *tex_num);
+int				redraw(void);
+int				is_wall(double x, double y);
+void			ft_up(void);
+void			ft_right(void);
+void			ft_down(void);
+void			ft_left(void);
+int				moves(void);
+void			pixel_put(int x, int y, int color);
+void			game_init(void);
+t_cup			*g_game(void);
+int				ft_close(void);
+int				get_the_vue(char **map, int i, int j);
+void			find_player_position(char **map);
+void			cast_rays(void);
+void			prepare_data(void);
+void			draw_minimap(void);
+void			draw_gun(void);
 
 #endif

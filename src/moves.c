@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   moves.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:41:53 by aniki             #+#    #+#             */
-/*   Updated: 2025/10/02 20:19:40 by aniki            ###   ########.fr       */
+/*   Updated: 2025/10/03 15:50:17 by anas             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	moves(void)
 	return (0);
 }
 
-int redraw(void)
+int	redraw(void)
 {
 	if (g_game()->keys.needs_redraw || g_game()->keys.mouse_moved)
 	{

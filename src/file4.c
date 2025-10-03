@@ -1,21 +1,34 @@
-# include "../cub.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   file4.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 15:29:08 by anas              #+#    #+#             */
+/*   Updated: 2025/10/03 15:43:18 by anas             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void load_texture(t_texture *tex, char *path)
+#include "../cub.h"
+
+void	load_texture(t_texture *tex, char *path)
 {
-    int bpp;
-	int size_line;
-	int endian;
+	int	bpp;
+	int	size_line;
+	int	endian;
 
-    if (!path)
-        error("Error\ntexture path is NULL\n");
-    tex->img = mlx_xpm_file_to_image(g_game()->mlx, path, &tex->width, &tex->height);
-    if (!tex->img)
+	if (!path)
+		error("Error\ntexture path is NULL\n");
+	tex->img = mlx_xpm_file_to_image(g_game()->mlx, path,
+			&tex->width, &tex->height);
+	if (!tex->img)
 	{
-        printf("Error\nFailed to load texture: %s\n", path);
+		printf("Error\nFailed to load texture: %s\n", path);
 		gc_collect();
-        exit(10);
+		exit(EXIT_FAILURE);
 	}
-    tex->pixels = (int *)mlx_get_data_addr(tex->img, &bpp, &size_line, &endian);
+	tex->pixels = (int *)mlx_get_data_addr(tex->img, &bpp, &size_line, &endian);
 }
 
 void	determine_texture(int *tex_num)
@@ -23,16 +36,16 @@ void	determine_texture(int *tex_num)
 	if (g_game()->info.side == 0)
 	{
 		if (g_game()->info.raydirx > 0)
-			*tex_num = 2;  // EAST
+			*tex_num = 2;
 		else
-			*tex_num = 3;  // WEST
+			*tex_num = 3;
 	}
 	else
 	{
 		if (g_game()->info.raydiry > 0)
-			*tex_num = 1;  // SOUTH  
+			*tex_num = 1;
 		else
-			*tex_num = 0;  // NORTH
+			*tex_num = 0;
 	}
 }
 
@@ -47,7 +60,7 @@ void	draw_wall_texture(t_texture_params *params, t_texture *tex, int tex_x)
 	tex_pos = 0.0;
 	y = params->draw_start;
 	if (tex_x < 0 || tex_x >= tex->width)
-		return;
+		return ;
 	while (y < params->draw_end)
 	{
 		tex_y = (int)tex_pos;

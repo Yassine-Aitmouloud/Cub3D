@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/03 15:29:17 by anas              #+#    #+#             */
+/*   Updated: 2025/10/03 15:49:20 by anas             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../cub.h"
 
 void	error(char *msg)
@@ -44,11 +56,13 @@ int	ft_close(void)
 void	pixel_put(int x, int y, int color)
 {
 	char	*dst;
+	int		num;
 
+	num = y * g_game()->line_length + x * (g_game()->bits_per_pixel / 8);
 	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
 		return ;
-	dst = g_game()->addr + (y * g_game()->line_length + x * (g_game()->bits_per_pixel / 8));
-	*(unsigned int*) dst = color;
+	dst = g_game()->addr + num;
+	*(unsigned int *) dst = color;
 }
 
 int	key_pressed(int key)
@@ -87,22 +101,22 @@ int	key_unpressed(int key)
 	return (0);
 }
 
-int mouse_move(int x)
+int	mouse_move(int x)
 {
-	static int  (last_x) = -1;
-	double 		sensitivity;
-	int 		delta_x;
+	double		sensitivity;
+	int			delta_x;
 
+	static int (last_x) = -1;
 	sensitivity = 0.3;
 	mlx_mouse_hide(g_game()->mlx, g_game()->win);
 	if (last_x == -1)
-		last_x = x;	
+		last_x = x;
 	delta_x = x - last_x;
 	last_x = x;
 	if (abs(delta_x) < 2)
-	    return (0);
+		return (0);
 	if (abs(delta_x) > 10)
-	    sensitivity = 0.6;
+		sensitivity = 0.6;
 	g_game()->info.angle += (delta_x * sensitivity);
 	g_game()->keys.mouse_moved = 1;
 	g_game()->keys.needs_redraw = 1;
