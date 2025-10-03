@@ -3,28 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 15:29:17 by anas              #+#    #+#             */
-/*   Updated: 2025/10/03 15:49:20 by anas             ###   ########.fr       */
+/*   Updated: 2025/10/03 17:43:51 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub.h"
-
-void	error(char *msg)
-{
-	write(2, msg, ft_strlen(msg));
-	gc_collect();
-	exit(EXIT_FAILURE);
-}
 
 int	is_wall(double x, double y)
 {
 	int		map_x;
 	int		map_y;
 
-	double (radius) = 0.1;
+	double (radius) = 0.2;
 	map_x = (int)(x - radius);
 	map_y = (int)(y - radius);
 	if (map_y < 0 || map_x < 0 || !content()->map[map_y]
@@ -46,11 +39,6 @@ int	is_wall(double x, double y)
 		|| !content()->map[map_y][map_x] || content()->map[map_y][map_x] == '1')
 		return (1);
 	return (0);
-}
-
-int	ft_close(void)
-{
-	exit(175);
 }
 
 void	pixel_put(int x, int y, int color)
@@ -101,28 +89,6 @@ int	key_unpressed(int key)
 	return (0);
 }
 
-int	mouse_move(int x)
-{
-	double		sensitivity;
-	int			delta_x;
-
-	static int (last_x) = -1;
-	sensitivity = 0.3;
-	mlx_mouse_hide(g_game()->mlx, g_game()->win);
-	if (last_x == -1)
-		last_x = x;
-	delta_x = x - last_x;
-	last_x = x;
-	if (abs(delta_x) < 2)
-		return (0);
-	if (abs(delta_x) > 10)
-		sensitivity = 0.6;
-	g_game()->info.angle += (delta_x * sensitivity);
-	g_game()->keys.mouse_moved = 1;
-	g_game()->keys.needs_redraw = 1;
-	return (0);
-}
-
 int	main(int ac, char **av)
 {
 	if (ac != 2)
@@ -139,7 +105,6 @@ int	main(int ac, char **av)
 	cast_rays();
 	moves();
 	mlx_hook(g_game()->win, CROSS, 0, ft_close, NULL);
-	// mlx_hook(g_game()->win, 6, 1L << 6, mouse_move, NULL);
 	mlx_hook(g_game()->win, 2, 1L << 0, key_pressed, NULL);
 	mlx_hook(g_game()->win, 3, 1L << 1, key_unpressed, NULL);
 	mlx_put_image_to_window(g_game()->mlx, g_game()->win, g_game()->img, 0, 0);

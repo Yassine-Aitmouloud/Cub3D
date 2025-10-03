@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   moves.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:41:53 by aniki             #+#    #+#             */
-/*   Updated: 2025/10/03 15:50:17 by anas             ###   ########.fr       */
+/*   Updated: 2025/10/03 17:42:28 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,37 +25,17 @@ int	moves(void)
 	if (g_game()->keys.arrow_left)
 	{
 		g_game()->info.angle -= 3;
-		mlx_clear_window(g_game()->mlx, g_game()->win);
-		cast_rays();
-		mlx_put_image_to_window(g_game()->mlx,
-			g_game()->win, g_game()->img, 0, 0);
+		g_game()->keys.needs_redraw = 1;
+		redraw();
 	}
 	if (g_game()->keys.arrow_right)
 	{
 		g_game()->info.angle += 3;
-		mlx_clear_window(g_game()->mlx, g_game()->win);
-		cast_rays();
-		mlx_put_image_to_window(g_game()->mlx, g_game()->win,
-			g_game()->img, 0, 0);
+		g_game()->keys.needs_redraw = 1;
+		redraw();
 	}
 	draw_minimap();
 	draw_gun();
-	return (0);
-}
-
-int	redraw(void)
-{
-	if (g_game()->keys.needs_redraw || g_game()->keys.mouse_moved)
-	{
-		mlx_clear_window(g_game()->mlx, g_game()->win);
-		cast_rays();
-		mlx_put_image_to_window(g_game()->mlx,
-			g_game()->win, g_game()->img, 0, 0);
-		draw_minimap();
-		draw_gun();
-		g_game()->keys.needs_redraw = 0;
-		g_game()->keys.mouse_moved = 0;
-	}
 	return (0);
 }
 

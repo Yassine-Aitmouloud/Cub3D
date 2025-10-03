@@ -1,51 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file1.c                                            :+:      :+:    :+:   */
+/*   dda.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 15:28:55 by anas              #+#    #+#             */
-/*   Updated: 2025/10/03 15:32:21 by anas             ###   ########.fr       */
+/*   Updated: 2025/10/03 17:39:35 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cub.h"
-
-void	draw_minimap_rows(t_minimap *mini)
-{
-	int	map_y;
-	int	map_x;
-	int	grid_radius;
-
-	grid_radius = mini->radius / MINIMAP_SCALE;
-	map_y = mini->player_y - grid_radius;
-	while (map_y <= mini->player_y + grid_radius)
-	{
-		map_x = mini->player_x - grid_radius;
-		while (map_x <= mini->player_x + grid_radius)
-		{
-			draw_minimap_cell(map_x, map_y, mini);
-			map_x++;
-		}
-		map_y++;
-	}
-}
-
-void	draw_minimap(void)
-{
-	t_minimap	mini;
-
-	mini.center_x = 100;
-	mini.center_y = 100;
-	mini.radius = 100;
-	get_map_size(&mini.map_height, &mini.map_width);
-	mini.player_x = g_game()->info.px;
-	mini.player_y = g_game()->info.py;
-	draw_minimap_rows(&mini);
-	draw_square(mini.center_x - MINIMAP_SCALE / 2,
-		mini.center_y - MINIMAP_SCALE / 2, 0xFF0000);
-}
 
 void	step_ray_x(void)
 {
