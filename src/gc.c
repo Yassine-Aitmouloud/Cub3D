@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gc.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/25 14:23:01 by abenba            #+#    #+#             */
-/*   Updated: 2025/10/03 16:10:09 by anas             ###   ########.fr       */
+/*   Updated: 2025/10/09 19:52:38 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,21 @@ void	gc_collect(void)
 		current = next;
 	}
 	content()->g_head = NULL;
+}
+
+void	clear_textures(void)
+{
+	int	i;
+
+	i = 0;
+	while (i < 4)
+	{
+		if (g_game()->textures[i].img)
+		{
+			mlx_destroy_image(g_game()->mlx, g_game()->textures[i].img);
+			g_game()->textures[i].img = NULL;
+			g_game()->textures[i].pixels = NULL;
+		}
+		i++;
+	}
 }

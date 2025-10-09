@@ -6,7 +6,7 @@
 /*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 15:29:17 by anas              #+#    #+#             */
-/*   Updated: 2025/10/03 17:43:51 by aniki            ###   ########.fr       */
+/*   Updated: 2025/10/09 19:52:10 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,22 +41,14 @@ int	is_wall(double x, double y)
 	return (0);
 }
 
-void	pixel_put(int x, int y, int color)
-{
-	char	*dst;
-	int		num;
-
-	num = y * g_game()->line_length + x * (g_game()->bits_per_pixel / 8);
-	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
-		return ;
-	dst = g_game()->addr + num;
-	*(unsigned int *) dst = color;
-}
-
 int	key_pressed(int key)
 {
 	if (key == ESC)
+	{
+		gc_collect();
+		clear_mlx();
 		exit(0);
+	}
 	if (key == KEY_UP)
 		g_game()->keys.up = 1;
 	if (key == KEY_DOWN)
@@ -89,6 +81,32 @@ int	key_unpressed(int key)
 	return (0);
 }
 
+void	clear_mlx(void)
+{
+	clear_textures();
+	if (g_game()->gun_img)
+	{
+		mlx_destroy_image(g_game()->mlx, g_game()->gun_img);
+		g_game()->gun_img = NULL;
+	}
+	if (g_game()->img)
+	{
+		mlx_destroy_image(g_game()->mlx, g_game()->img);
+		g_game()->img = NULL;
+	}
+	if (g_game()->win)
+	{
+		mlx_destroy_window(g_game()->mlx, g_game()->win);
+		g_game()->win = NULL;
+	}
+	if (g_game()->mlx)
+	{
+		mlx_destroy_display(g_game()->mlx);
+		free(g_game()->mlx);
+		g_game()->mlx = NULL;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	if (ac != 2)
@@ -111,5 +129,6 @@ int	main(int ac, char **av)
 	mlx_loop_hook(g_game()->mlx, moves, NULL);
 	mlx_loop(g_game()->mlx);
 	gc_collect();
+	clear_mlx();
 	return (0);
 }

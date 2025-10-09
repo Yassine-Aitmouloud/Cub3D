@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: anas <anas@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 15:04:17 by anas              #+#    #+#             */
-/*   Updated: 2025/10/03 19:17:41 by anas             ###   ########.fr       */
+/*   Updated: 2025/10/09 19:52:52 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,9 @@ typedef struct queue
 	int			capacity;
 }				t_queue;
 
+void	clear_textures(void);
+void	pixel_put(int x, int y, int color);
+void			clear_mlx(void);
 void			error(char *msg);
 int				check_file(char *file);
 int				valid_name(char *file, char *extention);

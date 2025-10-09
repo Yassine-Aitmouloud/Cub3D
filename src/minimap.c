@@ -6,7 +6,7 @@
 /*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 17:30:59 by aniki             #+#    #+#             */
-/*   Updated: 2025/10/03 17:31:43 by aniki            ###   ########.fr       */
+/*   Updated: 2025/10/09 19:48:57 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,5 +72,8 @@ void	error(char *msg)
 
 int	ft_close(void)
 {
+	printf("Window close - starting cleanup\n");
+	gc_collect();
+	clear_mlx();
 	exit(1);
 }

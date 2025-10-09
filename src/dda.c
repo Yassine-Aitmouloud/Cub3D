@@ -6,7 +6,7 @@
 /*   By: aniki <aniki@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/03 15:28:55 by anas              #+#    #+#             */
-/*   Updated: 2025/10/03 17:39:35 by aniki            ###   ########.fr       */
+/*   Updated: 2025/10/09 19:38:55 by aniki            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,16 @@ void	cast_rays(void)
 		cast_ray(i);
 		i++;
 	}
+}
+
+void	pixel_put(int x, int y, int color)
+{
+	char	*dst;
+	int		num;
+
+	num = y * g_game()->line_length + x * (g_game()->bits_per_pixel / 8);
+	if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT)
+		return ;
+	dst = g_game()->addr + num;
+	*(unsigned int *) dst = color;
 }
