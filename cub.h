@@ -41,14 +41,6 @@ enum		e_keycode
 	CAMERA_L = 65361,
 };
 
-enum e_Direction
-{
-	NORTH,
-	EAST,
-	SOUTH,
-	WEST
-};
-
 typedef struct s_texture
 {
 	void	*img;
@@ -79,7 +71,6 @@ typedef struct s_player
 	double				step_y;
 	int					side;
 	int					hit;
-	enum e_Direction	vue;
 }	t_player;
 
 typedef struct s_keys

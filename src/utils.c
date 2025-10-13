@@ -17,13 +17,13 @@ int	get_the_vue(char **map, int i, int j)
 	if (!map)
 		return (1);
 	if (map[i][j] == 'S')
-		return (g_game()->info.vue = SOUTH, 0);
+		return (g_game()->info.angle = 270, 0);
 	if (map[i][j] == 'N')
-		return (g_game()->info.vue = NORTH, 0);
+		return (g_game()->info.angle = 90, 0);
 	if (map[i][j] == 'W')
-		return (g_game()->info.vue = WEST, 0);
+		return (g_game()->info.angle = 180, 0);
 	if (map[i][j] == 'E')
-		return (g_game()->info.vue = EAST, 0);
+		return (g_game()->info.angle = 0, 0);
 	return (1);
 }
 
@@ -39,9 +39,7 @@ void	find_player_position(char **map)
 		j = 0;
 		while (map[i][j])
 		{
-			if (map[i][j] == 'N' ||
-				map[i][j] == 'W' || map[i][j] == 'S' ||
-				map[i][j] == 'E')
+			if (get_the_vue(map, i, j) == 0)
 			{
 				g_game()->info.px = j + 0.5;
 				g_game()->info.py = i + 0.5;
@@ -67,7 +65,7 @@ void	gun_pos(void)
 	int (scaled_width) = g_game()->gun_width * g_game()->gun_scale;
 	int (scaled_height) = g_game()->gun_height * g_game()->gun_scale;
 	g_game()->gun_x = (WIDTH - scaled_width) / 2;
-	g_game()->gun_y = HEIGHT - scaled_height;
+	g_game()->gun_y = HEIGHT - scaled_height - 69;
 }
 
 void	load_gun_texture(void)
