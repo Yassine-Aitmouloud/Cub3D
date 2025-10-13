@@ -67,6 +67,7 @@ void	error(char *msg)
 {
 	write(2, msg, ft_strlen(msg));
 	gc_collect();
+	clear_mlx();
 	exit(EXIT_FAILURE);
 }
 

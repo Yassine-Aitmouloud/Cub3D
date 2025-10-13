@@ -199,8 +199,8 @@ typedef struct queue
 	int			capacity;
 }				t_queue;
 
-void	clear_textures(void);
-void	pixel_put(int x, int y, int color);
+void			clear_textures(void);
+void			pixel_put(int x, int y, int color);
 void			clear_mlx(void);
 void			error(char *msg);
 int				check_file(char *file);

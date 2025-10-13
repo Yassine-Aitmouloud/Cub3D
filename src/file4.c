@@ -26,6 +26,7 @@ void	load_texture(t_texture *tex, char *path)
 	{
 		printf("Error\nFailed to load texture: %s\n", path);
 		gc_collect();
+		clear_mlx();
 		exit(EXIT_FAILURE);
 	}
 	tex->pixels = (int *)mlx_get_data_addr(tex->img, &bpp, &size_line, &endian);

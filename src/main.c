@@ -119,7 +119,6 @@ int	main(int ac, char **av)
 	if (valid_map(av[1]) == 0 || valid_h_w_walls() == 0)
 		error("Error\nInvalid Map\n");
 	game_init();
-	prepare_data();
 	cast_rays();
 	moves();
 	mlx_hook(g_game()->win, CROSS, 0, ft_close, NULL);

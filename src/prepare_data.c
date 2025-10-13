@@ -36,6 +36,7 @@ t_cup	*g_game(void)
 void	game_init(void)
 {
 	g_game()->mlx = mlx_init();
+	prepare_data();
 	g_game()->win = mlx_new_window(g_game()->mlx, WIDTH, HEIGHT, "GO GO GO");
 	g_game()->img = mlx_new_image(g_game()->mlx, WIDTH, HEIGHT);
 	g_game()->addr = mlx_get_data_addr(g_game()->img, &g_game()->bits_per_pixel,
