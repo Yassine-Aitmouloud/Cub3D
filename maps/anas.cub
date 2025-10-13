@@ -1,11 +1,11 @@
-NO ./textures/test.xpm
-SO ./textures/test.xpm
-WE ./textures/test.xpm
-EA ./textures/.xpm
+NO ./textures/n.xpm
+SO ./textures/s.xpm
+WE ./textures/w.xpm
+EA ./textures/e.xpm
 
 
 F 66,66,66
-    C 135,206,255
+C 135,206,255
 
 
 11111111111111111111111111111111111111111
