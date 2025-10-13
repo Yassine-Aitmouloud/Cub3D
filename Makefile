@@ -10,18 +10,16 @@ NAME = cub3D
 LIBFT = libft/libft.a
 MLX = minilibx-linux/libmlx.a
 
-
+MLX_DIR = /usr/local
+MLX_FLAGS = -L$(MLX_DIR)/lib -lmlx -lX11 -lXext -lm
 
 all: $(LIBFT) $(NAME) 
 
 $(LIBFT):
 	$(MAKE) -C libft
 
-$(MLX):
-	$(MAKE) -C minilibx-linux
-
-$(NAME): $(OBJ) $(LIBFT) $(MLX)
-	$(CC) $(OBJ) $(LIBFT) $(MLX) -lXext -lX11 -lm -lz -o $(NAME) 
+$(NAME): $(OBJ) $(LIBFT)
+	$(CC) $(OBJ) $(LIBFT) $(MLX_FLAGS) -o $(NAME) 
 
 clean:
 	$(MAKE) -C libft clean

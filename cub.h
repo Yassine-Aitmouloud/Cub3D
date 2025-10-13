@@ -23,7 +23,7 @@
 # include <stdlib.h>
 # include <math.h>
 # include <time.h>
-# include "./minilibx-linux/mlx.h"
+# include <mlx.h>
 # include "libft/libft.h"
 # include <fcntl.h>
 # include <X11/keysym.h>
