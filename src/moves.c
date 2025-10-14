@@ -24,13 +24,13 @@ int	moves(void)
 		ft_left();
 	if (g_game()->keys.arrow_left)
 	{
-		g_game()->info.angle -= 3;
+		g_game()->info.angle -= 1.5;
 		g_game()->keys.needs_redraw = 1;
 		redraw();
 	}
 	if (g_game()->keys.arrow_right)
 	{
-		g_game()->info.angle += 3;
+		g_game()->info.angle += 1.5;
 		g_game()->keys.needs_redraw = 1;
 		redraw();
 	}

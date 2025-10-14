@@ -1,7 +1,7 @@
-NO ./textures/n.xpm
-SO ./textures/s.xpm
-WE ./textures/w.xpm
-EA ./textures/test.xpm
+NO ./textures/test.xpm
+SO ./textures/Boardgames_Card_Joker_Face.xpm
+WE ./textures/test2.xpm
+EA ./textures/coin.xpm
 
 
 F 66,66,66
